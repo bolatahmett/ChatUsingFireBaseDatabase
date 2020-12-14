@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import FirebaseContext from './components/FirebaseContext';
-import firebase from './components/firebase';
+import firebase, { database } from './components/firebase';
 
 interface AppProps {
     firebase: any;
+    database: any;
 }
 
 export default class App extends React.Component<AppProps> {
@@ -27,17 +28,17 @@ export default class App extends React.Component<AppProps> {
     }
 
     clearHistoryFromDb() {
-        var query = this.props.firebase.database().ref("chats");
+        var query = this.props.database.ref("chats");
         query.remove();
     }
 
     setOnline(userName: string, isOnline: number) {
-        this.props.firebase.database().ref("users/" + userName + "/online").set(isOnline);
+        this.props.database.ref("users/" + userName + "/online").set(isOnline);
     }
 
     saveUser(user: { userName: any; password: any; ip: any; sex: any; color: any; }) {
-        var userKey = this.props.firebase.database().ref("users/" + user.userName).push().key; //Rastgele bir userkey gönderir.
-        this.props.firebase.database().ref("users/" + user.userName).set({
+        var userKey = this.props.database.ref("users/" + user.userName).push().key; //Rastgele bir userkey gönderir.
+        this.props.database.ref("users/" + user.userName).set({
             username: user.userName,
             password: user.password,
             kulid: userKey,
@@ -50,21 +51,21 @@ export default class App extends React.Component<AppProps> {
 
     addBlockedIp(ip: string, userName: string) {
 
-        var key = this.props.firebase.database().ref("blockedusers/" + ip).push().key; //Rastgele bir userkey gönderir.
-        this.props.firebase.database().ref("blockedusers/" + ip).set({
+        var key = this.props.database.ref("blockedusers/" + ip).push().key; //Rastgele bir userkey gönderir.
+        this.props.database.ref("blockedusers/" + ip).set({
             ip: ip,
             key: key,
         });
         alert("User blocked");
 
-        var query = this.props.firebase.database().ref("blockedusers");
+        var query = this.props.database.ref("blockedusers");
         query.on('child_added', (snapshot: { val: () => any; }) => {
             var data = snapshot.val();
             if (data.ip === this.getGlobalUserInfo) {
                 $("#mesaj").attr('disabled', 'disabled');
             }
         });
-        var ref = this.props.firebase.database().ref("users/" + userName);
+        var ref = this.props.database.ref("users/" + userName);
         ref.remove();
     }
 
@@ -90,13 +91,13 @@ export default class App extends React.Component<AppProps> {
             color: ""
         };
 
-        var ref = this.props.firebase.database().ref("blockedusers/" + ip);
+        var ref = this.props.database.ref("blockedusers/" + ip);
         ref.once("value", (snapshot: { exists: () => any; }) => {
             if (snapshot.exists()) {
                 alert("Kullanıcı girişi yasaklandı!!!");
             } else {
                 if (userName != "") {
-                    var ref = this.props.firebase.database().ref("users/" + userName);
+                    var ref = this.props.database.ref("users/" + userName);
                     ref.once("value")
                         .then((snapshot: { child: (arg0: string) => { (): any; new(): any; val: { (): number; new(): any; }; }; }) => {
                             var name = snapshot.child("username").val() as unknown as string;
@@ -141,8 +142,8 @@ export default class App extends React.Component<AppProps> {
 
         if (userInfo.userName != "" && mesaj != "") {
             var formattedTime = this.formatTime(new Date());
-            var messageKey = this.props.firebase.database().ref("chats/").push().key;
-            this.props.firebase.database().ref("chats/" + messageKey).set({
+            var messageKey = this.props.database.ref("chats/").push().key;
+            this.props.database.ref("chats/" + messageKey).set({
                 message: mesaj,
                 from: userInfo.userName,
                 timeOfMessage: formattedTime,
@@ -163,7 +164,7 @@ export default class App extends React.Component<AppProps> {
     }
 
     chatYukle(userName: any) {
-        var query = this.props.firebase.database().ref("chats");
+        var query = this.props.database.ref("chats");
         // query.on('child_removed',  (snapshot) {
         //     $("#mesajAlani").html("");
         //     console.log("removed");
@@ -181,7 +182,7 @@ export default class App extends React.Component<AppProps> {
                 $("#mesajAlani").append(mesaj);
             } else {
 
-                var ref = this.props.firebase.database().ref("users/" + data.from);
+                var ref = this.props.database.ref("users/" + data.from);
                 ref.once("value")
                     .then((snapshot: { exists: () => any; key: string; }) => {
                         if (snapshot.exists()) {
@@ -202,7 +203,7 @@ export default class App extends React.Component<AppProps> {
     }
 
     userLoad() {
-        var query = this.props.firebase.database().ref("users");
+        var query = this.props.database.ref("users");
         query.on('value', (snapshot: any[]) => {
             $('#contacts').empty();
             snapshot.forEach((childSnapshot: { val: () => any; }) => {
@@ -432,5 +433,5 @@ export default class App extends React.Component<AppProps> {
 
 // @ts-ignore
 ReactDOM.render(<FirebaseContext.Provider value={firebase}>
-    <App firebase={firebase} />
+    <App firebase={firebase} database={database} />
 </FirebaseContext.Provider>, document.getElementById('app'))
