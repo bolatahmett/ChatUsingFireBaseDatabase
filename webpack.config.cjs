@@ -5,7 +5,6 @@ const dotenv = require('dotenv');
 
 
 var dotenvConfig = dotenv.config({ path: __dirname + '/.env' });
-console.log(dotenvConfig.parsed);
 module.exports = env => {
     console.log(env);
     return {
@@ -19,11 +18,11 @@ module.exports = env => {
             contentBase: path.resolve(__dirname, "public"),
         },
         resolve: {
-            extensions: [".js", ".jsx", ".json", ".ts", ".tsx", ".esm.js"],
+            extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
         },
         module: {
             rules: [
-                { test: /\.(js)$/, use: 'babel-loader' },
+                { test: /\.(js)$/, use: 'babel-loader', exclude: path.resolve(__dirname, 'node_modules/') },
                 { test: /\.css$/, use: ['style-loader', 'css-loader'] },
                 {
                     test: /\.m?js/,
@@ -39,7 +38,7 @@ module.exports = env => {
                 template: 'app/index.html'
             }),
             new webpack.DefinePlugin({
-                "process.env": dotenvConfig.parsed
+                "process.env": JSON.stringify(dotenvConfig.parsed)
             }),
         ]
 
