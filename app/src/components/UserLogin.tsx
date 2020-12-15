@@ -3,12 +3,13 @@ import { getColor, getGlobalUserInfo, setOnline, setUserInfoSessionStorage } fro
 import { database } from './firebase';
 
 interface UserLoginProps {
-
+    setUserName: any;
 }
 
 export default function UserLogin(props: UserLoginProps) {
 
     const loadChat = (userName: any, color: string) => {
+        props.setUserName(userName);
         $("#girisEkrani").hide();
         $("#chatEkrani").show();
     }
@@ -27,7 +28,6 @@ export default function UserLogin(props: UserLoginProps) {
     }
 
     const login = () => {
-
         var userName = $("#kadi").val() as string;
         var password = $("#password").val();
         var ip = getGlobalUserInfo();
@@ -60,7 +60,7 @@ export default function UserLogin(props: UserLoginProps) {
                                 user.userName = user.userName + "_";
                                 saveUser(user);
                                 setUserInfoSessionStorage(user);
-                                loadChat(userName, user.color);
+                                loadChat(user.userName, user.color);
                             } else {
 
                                 var pass = snapshot.child("password").val();
@@ -74,7 +74,6 @@ export default function UserLogin(props: UserLoginProps) {
                                 }
                             }
                         });
-
                 } else {
                     alert("Kullanıcı adını boş bırakmayınız!");
                 }

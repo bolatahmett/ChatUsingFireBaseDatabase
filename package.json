@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "create": "webpack",
-    "start": "webpack-dev-server --open"
+    "start": "webpack serve"
   },
   "keywords": [],
   "author": "",

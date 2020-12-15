@@ -18,7 +18,7 @@ export default function ChatFooter() {
     }
 
     const mesajGonder = () => {
-        var event = window.event;
+        debugger;
         var mesaj = $("#mesaj").val();
         var userInfo = getUserInfoFromStorage();
 
@@ -32,13 +32,8 @@ export default function ChatFooter() {
                 color: userInfo.color,
                 sex: userInfo.sex
             });
-            clearHistoryFromDb();
-            $("#mesaj").val(' ');
             $("#mesaj").val('');
-            event!.preventDefault();
-            setTimeout(() => {
-                $('#mesaj').focus();
-            }, 0);
+
         } else {
             alert("Lütfen boş alan bırakmayınız!");
         }

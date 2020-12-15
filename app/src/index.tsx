@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import FirebaseContext from './components/FirebaseContext';
@@ -11,22 +11,19 @@ interface AppProps {
     database: any;
 }
 
-export default class App extends React.Component<AppProps> {
+export default function App(props: AppProps) {
 
-    constructor(props: any) {
-        super(props);
-    }
+    const [userName, setUserName] = useState(undefined)
 
-    render() {
-        return (
-            <>
-                <div className="container-fluid" style={{ height: "100%" }}>
-                    <UserLogin></UserLogin>
-                    <Chat></Chat>
-                </div>
-            </>
-        )
-    }
+    return (
+        <>
+            <div className="container-fluid" style={{ height: "100%" }}>
+                <UserLogin setUserName={setUserName}></UserLogin>
+                {userName && <Chat userName={userName}></Chat>}
+            </div>
+        </>
+    )
+
 }
 
 

@@ -15,7 +15,8 @@ module.exports = env => {
             filename: 'bundle.js'
         },
         devServer: {
-            contentBase: path.resolve(__dirname, "public"),
+            port: 9000
+
         },
         resolve: {
             extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
