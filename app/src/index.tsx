@@ -1,33 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import FirebaseContext from './components/FirebaseContext';
 import firebase, { database } from './components/firebase';
-import UserLogin from './components/UserLogin';
-import Chat from './components/chat';
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import rootReducer from './redux/reducers/index';
+import App from './app';
 
-interface AppProps {
-    firebase: any;
-    database: any;
-}
-
-export default function App(props: AppProps) {
-
-    const [userName, setUserName] = useState(undefined)
-
-    return (
-        <>
-            <div className="container-fluid" style={{ height: "100%" }}>
-                <UserLogin setUserName={setUserName}></UserLogin>
-                {userName && <Chat userName={userName}></Chat>}
-            </div>
-        </>
-    )
-
-}
-
+const store = createStore(rootReducer);
 
 // @ts-ignore
 ReactDOM.render(<FirebaseContext.Provider value={firebase}>
-    <App firebase={firebase} database={database} />
+    <Provider store={store}>  <App firebase={firebase} database={database} /> </Provider>
 </FirebaseContext.Provider>, document.getElementById('app'))
