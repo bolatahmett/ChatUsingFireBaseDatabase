@@ -29,11 +29,12 @@ export default function Users() {
                 <p className="fas fa-user" style={{ marginTop: "revert", marginBottom: "revert", color: contactItem.color }} >  {contactItem.username} </p>
             </div>
             <div id={"options" + contactItem.kulid + ""} style={{ display: "none", cursor: "pointer" }} >
-                <ul>
-                    <li onClick={() => addBlockedIp(contactItem.ip, contactItem.username)}><i className="fas fa-ban"></i> Engelle</li>
+                <ul style={{ listStyleType: "none" }}>
+                    <li onClick={() => addBlockedIp(contactItem.ip, contactItem.username)}><i className="fas fa-comment-slash"></i> Engelle</li>
+                    <li><i className="fas fa-comment"></i> Mesaj Gönder</li>
                 </ul>
             </div>
-        </li >
+        </li>;
     });
 
     return (

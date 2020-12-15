@@ -1,7 +1,5 @@
 import { database } from "../components/firebase";
 
-
-
 export const setUserInfoSessionStorage = (user: { userName: any; password?: any; ip?: string; sex: any; color: any; }) => {
     sessionStorage.setItem("userInfo", JSON.stringify({ userName: user.userName, color: user.color, sex: user.sex }));
 }
@@ -25,35 +23,35 @@ export const setOnline = (userName: string, isOnline: number) => {
 
 export const addBlockedIp = (ip: string, userName: string) => {
 
-    var key = database.ref("blockedusers/" + ip).push().key; //Rastgele bir userkey gönderir.
+    var key = database.ref("blockedusers/" + ip).push().key;
     database.ref("blockedusers/" + ip).set({
         ip: ip,
         key: key,
     });
+
     alert("User blocked");
 
     var query = database.ref("blockedusers");
     query.on('child_added', (snapshot: { val: () => any; }) => {
         var data = snapshot.val();
-        if (data.ip === getGlobalUserInfo) {
+        if (data.ip === getGlobalUserInfo()) {
             $("#mesaj").attr('disabled', 'disabled');
         }
     });
+
     var ref = database.ref("users/" + userName);
     ref.remove();
 }
 
-
-
 export const showUserOptions = (key: string) => {
     var user = getUserInfoFromStorage();
-    if (user.userName === "Ahmet") {
-        if ($("#options" + key).is(":hidden")) {
-            $("#options" + key).show();
-        } else {
-            $("#options" + key).hide();
-        }
+
+    if ($("#options" + key).is(":hidden")) {
+        $("#options" + key).show();
+    } else {
+        $("#options" + key).hide();
     }
+
 }
 
 export const showMenu = () => {
@@ -63,7 +61,6 @@ export const showMenu = () => {
         $("#action_menu").hide();
     }
 }
-
 
 export const getColor = () => {
     var myColors = [
@@ -81,26 +78,13 @@ export const showTimeOfMessage = (key: string) => {
 }
 
 export const formatTime = (date: string | number | Date) => {
-
     let d = new Date(date);
-
     var h: any = d.getHours(), m = d.getMinutes(), l = "AM";
-    if (h > 12) {
-        h = h - 12;
-    }
-    if (h < 10) {
-        h = '0' + h;
-    }
-
-    if (d.getHours() >= 12) {
-        l = "PM"
-    } else {
-        l = "AM"
-    }
-
+    h = h > 12 ? h - 12 : h;
+    h = h < 10 ? '0' + h : h;
+    l = d.getHours() >= 12 ? "PM" : "AM";
     let mString = m < 10 ? '0' + m : m;
     return h + ':' + mString + ' ' + l;
-
 }
 
 export const getGlobalUserInfo = () => {
