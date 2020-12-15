@@ -1,7 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { addBlockedIp, showUserOptions } from '../helper/helper';
+import { database } from './firebase';
 
-export default function Users(props: any) {
+export default function Users() {
+
+    const [contactItems, setContactItem] = useState([]);
+
+    const userLoad = () => {
+        database.ref("users").on('value', (snapshot: any) => {
+            let changedContextItems: any = [];
+            snapshot.forEach((childSnapshot: any) => {
+                var data = childSnapshot.val();
+                if (data.online === 1) {
+                    changedContextItems.push(data);
+                }
+            });
+            setContactItem(changedContextItems);
+        });
+    }
+
+    useEffect(() => {
+        userLoad();
+    }, []);
 
     const getMessageItems = (contacts: any) => contacts.map((contactItem: any) => {
         return <li className="active">
@@ -26,7 +46,7 @@ export default function Users(props: any) {
                 </div>
                 <div style={{ height: "100%" }}>
                     <ul id="contacts" className="contacts">
-                        {getMessageItems(props.contacts)}
+                        {getMessageItems(contactItems)}
                     </ul>
                 </div>
                 <div className="card-footer"></div>

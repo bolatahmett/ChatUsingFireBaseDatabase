@@ -1,10 +1,51 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { showTimeOfMessage } from '../helper/helper';
+import { database } from './firebase';
 
 export default function ChatContent(props: any) {
+    const [messageItems, setMessageItems] = useState([]);
+
+    useEffect(() => {
+        chatYukle(props.userName);
+    }, []);
+
+    const chatYukle = (userName: any) => {
+
+        database.ref("chats").on('child_added', (snapshot: any) => {
+            var data = snapshot.val();
+            if (data.from == userName) {
+                const addedMessage = {
+                    key: snapshot.key,
+                    message: data.message,
+                    timeOfMessage: data.timeOfMessage
+                };
+
+                setMessageItems(prevMessages => ([...prevMessages, addedMessage]));
+
+            } else {
+                var ref = database.ref("users/" + data.from);
+                ref.once("value")
+                    .then((snapshot: any) => {
+                        if (snapshot.exists()) {
+                            const addedMessage = {
+                                key: snapshot.key,
+                                from: data.from,
+                                message: data.message,
+                                timeOfMessage: data.timeOfMessage,
+                                color: data.color,
+                                sex: data.sex
+                            };
+                            setMessageItems(prevMessages => ([...prevMessages, addedMessage]));
+                        }
+                    });
+            }
+
+            $(".card-body").scrollTop($('.card-body')[0].scrollHeight - $('.card-body')[0].clientHeight);
+        });
+    }
 
     const getMessageContent = () => {
-        return props.messageItems.map((item: any) => {
+        return messageItems.map((item: any) => {
             if (item.from) {
                 var imgurl = item.sex === "woman" ? "../images/woman.png" : "../images/man.png";
                 return <div className="d-flex">
@@ -27,7 +68,6 @@ export default function ChatContent(props: any) {
                 </div>;
             }
         });
-
     }
 
     return (

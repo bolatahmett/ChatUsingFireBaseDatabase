@@ -18,7 +18,6 @@ export default function ChatFooter() {
     }
 
     const mesajGonder = () => {
-        debugger;
         var mesaj = $("#mesaj").val();
         var userInfo = getUserInfoFromStorage();
 
@@ -32,6 +31,9 @@ export default function ChatFooter() {
                 color: userInfo.color,
                 sex: userInfo.sex
             });
+            setTimeout(() => {
+                clearHistoryFromDb();
+            }, 80000);
             $("#mesaj").val('');
 
         } else {
