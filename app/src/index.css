@@ -22,6 +22,7 @@
             overflow-y: auto;
 			font-size: x-small;
 			background-color: white;
+			height: "100%";
 		}
 
 		@media (min-width: 992px) { 
@@ -275,3 +276,12 @@
 -moz-background-size: cover;
 -o-background-size: cover;
 background-size: cover;} */
+
+
+.ant-tabs-content.ant-tabs-content-top {
+	height: 100% !important;
+}
+
+.ant-tabs.ant-tabs-top.ant-tabs-small{
+		height: 100% !important;
+}

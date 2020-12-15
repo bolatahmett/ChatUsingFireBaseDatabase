@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { showTimeOfMessage } from '../helper/helper';
 import { database } from './firebase';
+import { Col, Row, Tabs } from 'antd';
+import 'antd/dist/antd.css'
 
 export default function ChatContent(props: any) {
     const [messageItems, setMessageItems] = useState([]);
+    const { TabPane } = Tabs;
 
     useEffect(() => {
         chatYukle(props.userName);
@@ -71,10 +74,28 @@ export default function ChatContent(props: any) {
     }
 
     return (
-        <div className="card-body msg_card_body">
-            <div id="mesajAlani" className="col-md-24">
-                {getMessageContent()}
-            </div>
-        </div>
+        <>
+            <Tabs defaultActiveKey="1" type="line" size={"small"}>
+                <TabPane tab={<span style={{ color: "white" }}>Genel</span>} key="1">
+                    <Row style={{ height: "100%" }}>
+                        <Col span={24} style={{ height: "100%" }}>
+                            <div className="card-body msg_card_body" style={{ height: "100%" }}>
+                                <div id="mesajAlani" className="col-md-24" style={{ height: "100%" }}>
+                                    {getMessageContent()}
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                </TabPane>
+                <TabPane tab={<span style={{ color: "white" }}>Ahmet</span>} key="2">
+                    <div className="card-body msg_card_body">
+                    </div>
+                </TabPane>
+                <TabPane tab={<span style={{ color: "white" }}>Ahmet2</span>} key="3">
+                    <div className="card-body msg_card_body">
+                    </div>
+                </TabPane>
+            </Tabs>
+        </>
     )
 }

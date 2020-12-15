@@ -4,7 +4,6 @@ import ChatFooter from './ChatFooter';
 import ChatHeader from './ChatHeader';
 import ChatContent from './ChatContent';
 import Users from './Users';
-import { database } from './firebase';
 
 export default function Chat(props: any) {
 
