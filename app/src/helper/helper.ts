@@ -43,15 +43,13 @@ export const addBlockedIp = (ip: string, userName: string) => {
     ref.remove();
 }
 
-export const showUserOptions = (key: string) => {
-    var user = getUserInfoFromStorage();
-
-    if ($("#options" + key).is(":hidden")) {
-        $("#options" + key).show();
-    } else {
-        $("#options" + key).hide();
-    }
-
+export const showUserOptions = (key: string, userName: string, thatUser: string) => {
+    if (userName !== thatUser)
+        if ($("#options" + key).is(":hidden")) {
+            $("#options" + key).show();
+        } else {
+            $("#options" + key).hide();
+        }
 }
 
 export const showMenu = () => {

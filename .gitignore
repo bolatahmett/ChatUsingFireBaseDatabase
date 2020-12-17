@@ -5,3 +5,5 @@
 node_modules
 package-lock.json
 public/index.html
+.firebase/hosting..cache
+.firebase/hosting.cHVibGlj.cache

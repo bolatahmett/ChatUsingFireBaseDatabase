@@ -31,12 +31,12 @@ function Users(props: any) {
 
     const getMessageItems = (contacts: any) => contacts.map((contactItem: any) => {
         return <li className="active">
-            <div className="user_info" onClick={() => showUserOptions(contactItem.kulid)}>
+            <div className="user_info" onClick={() => showUserOptions(contactItem.kulid, contactItem.username, props.user)}>
                 <p className="fas fa-user" style={{ marginTop: "revert", marginBottom: "revert", color: contactItem.color }} >  {contactItem.username} </p>
             </div>
             <div id={"options" + contactItem.kulid + ""} style={{ display: "none", cursor: "pointer" }} >
                 <ul style={{ listStyleType: "none" }}>
-                    <li onClick={() => addBlockedIp(contactItem.ip, contactItem.username)}><i className="fas fa-comment-slash"></i> Engelle</li>
+                    {/* <li onClick={() => addBlockedIp(contactItem.ip, contactItem.username)}><i className="fas fa-comment-slash"></i> Engelle</li> */}
                     <li onClick={() => startChat(contactItem.username)}><i className="fas fa-comment"></i> Mesaj Gönder</li>
                 </ul>
             </div>

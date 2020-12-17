@@ -1,16 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { getColor, getGlobalUserInfo, setOnline, setUserInfoSessionStorage } from "../helper/helper";
 import { database } from './firebase';
 import { connect } from 'react-redux';
 import { loginUser } from '../redux/actions/action';
 import { addChat } from '../redux/actions/action';
+import { Radio, message, Form, Input, Button, Checkbox } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 interface UserLoginProps {
     loginUser: any;
     addChat: any;
 }
 
+const tailLayout = {
+    wrapperCol: { offset: 8, span: 16 },
+};
+
 function UserLogin(props: UserLoginProps) {
+
+
+    const onFinish = (values: any) => {
+        console.log('Success:', values);
+        login(values.username, values.password, values.sexOption);
+    };
+
+    const onFinishFailed = (errorInfo: any) => {
+        console.log('Failed:', errorInfo);
+    };
 
     const loadChat = (userName: any, color: string) => {
         props.loginUser(userName);
@@ -32,11 +48,9 @@ function UserLogin(props: UserLoginProps) {
         });
     }
 
-    const login = () => {
-        var userName = $("#kadi").val() as string;
-        var password = $("#password").val();
+    const login = (userName: string, password: string, sex: string) => {
+        password = password === undefined ? "" : password;
         var ip = getGlobalUserInfo();
-        var sex = $('input[name=sexOption]:checked').val();
         var user = {
             userName: userName,
             password: password,
@@ -48,40 +62,34 @@ function UserLogin(props: UserLoginProps) {
         var ref = database.ref("blockedusers/" + ip);
         ref.once("value", (snapshot: { exists: () => any; }) => {
             if (snapshot.exists()) {
-                alert("Kullanıcı girişi yasaklandı!!!");
+                message.warning("Kullanıcı girişi yasaklandı!!!");
             } else {
-                if (userName != "") {
-                    var ref = database.ref("users/" + userName);
-                    ref.once("value")
-                        .then((snapshot: any) => {
-                            var name = snapshot.child("username").val() as unknown as string;
-                            var color = snapshot.child("color").val() as unknown as string;
-                            user.color = getColor();
-                            if (name === null) {
-                                saveUser(user);
-                                setUserInfoSessionStorage(user);
-                                loadChat(userName, user.color);
-                            } else if (snapshot.child("online").val() == 1) {
-                                user.userName = user.userName + "_";
-                                saveUser(user);
-                                setUserInfoSessionStorage(user);
-                                loadChat(user.userName, user.color);
-                            } else {
 
-                                var pass = snapshot.child("password").val();
-                                if (pass === 0 || (pass === password)) {
-                                    setOnline(userName, 1);
-                                    loadChat(userName, color);
-                                    user.color = user.color ? user.color : getColor();
-                                    setUserInfoSessionStorage(user);
-                                } else {
-                                    alert("Şifre hatalı");
-                                }
+                var ref = database.ref("users/" + userName);
+                ref.once("value")
+                    .then((snapshot: any) => {
+                        var name = snapshot.child("username").val() as unknown as string;
+                        var color = snapshot.child("color").val() as unknown as string;
+                        user.color = getColor();
+                        if (name === null) {
+                            saveUser(user);
+                            setUserInfoSessionStorage(user);
+                            loadChat(userName, user.color);
+                        } else if (snapshot.child("online").val() == 1) {
+                            message.warning("Kullanıcı şuan online. Farklı bir kullanıcı ile giriş yapınız!");
+                        } else {
+
+                            var pass = snapshot.child("password").val();
+                            if (pass === 0 || (pass === password)) {
+                                setOnline(userName, 1);
+                                loadChat(userName, color);
+                                user.color = user.color ? user.color : getColor();
+                                setUserInfoSessionStorage(user);
+                            } else {
+                                message.warning("Hatalı şifre!");
                             }
-                        });
-                } else {
-                    alert("Kullanıcı adını boş bırakmayınız!");
-                }
+                        }
+                    });
             }
         });
     }
@@ -89,51 +97,39 @@ function UserLogin(props: UserLoginProps) {
     return (
         <div id="girisEkrani" className="row vertical-center">
             <div className="col-md-4 offset-md-4">
-                <div className="input-group mb-3">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text" id="kullanici_adi">@</span>
-                    </div>
-                    <input type="text" className="form-control" placeholder="Kullanıcı adı giriniz"
-                        aria-label="Kullanıcı adı giriniz" aria-describedby="kullanici_adi" id="kadi"
-                        style={{ fontSize: "0.75rem !important" }}></input>
+                <h3 style={{ fontFamily: "cursive", textAlign: "center" }}>Chat</h3>
+                <Form
+                    name={"LoginForm"}
+                    initialValues={{ remember: true }}
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                >
+                    <Form.Item name="username"
+                        rules={[{ required: true, message: 'Lütfen kullanıcı adı giriniz!' }]} >
+                        <Input placeholder={"Kullanıcı Adı"} prefix={<UserOutlined className="site-form-item-icon" />} />
+                    </Form.Item>
 
-                </div>
-                <div className="input-group mb-3">
-                    <input type="password" className="form-control" placeholder="Şifre (opsiyonel)"
-                        aria-label="Şifre giriniz (opsiyonel)" aria-describedby="password" id="password"
-                        style={{ fontSize: "0.75rem !important" }}></input>
-                </div>
-                <div className="input-group mb-3">
-                    <div className="form-check col-6">
-                        <input className="form-check-input" type="radio" name="sexOption" id="woman" value="woman" checked></input>
-                        <label className="form-check-label" htmlFor="woman">
-                            <img style={{ height: "32px" }} src="../images/woman.png"></img>
-                        </label>
-                    </div>
-                    <div className="form-check col-6">
-                        <input className="form-check-input" type="radio" name="sexOption" id="man" value="man"></input>
-                        <label className="form-check-label" htmlFor="man">
-                            <img style={{ height: "32px" }} src="../images/man.png"></img>
-                        </label>
-                    </div>
-                </div>
-                <div className="input-group mb-3">
-                    <div className="form-check col-6">
-                        <input className="form-check-input" type="radio" name="sexOption" id="lesbian" value="lesbian"></input>
-                        <label className="form-check-label" htmlFor="lesbian">
-                            Lezbiyen
-                        </label>
-                    </div>
-                    <div className="form-check col-6">
-                        <input className="form-check-input" type="radio" name="sexOption" id="gay" value="gay"></input>
-                        <label className="form-check-label" htmlFor="gay">
-                            Gay
-                        </label>
-                    </div>
-                </div>
-                <div className="input-group mb-3">
-                    <button type="button" onClick={login.bind(this)} className="form-control btn btn-success">Giriş Yap</button>
-                </div>
+                    <Form.Item name="password" >
+                        <Input.Password placeholder={"Şifre"} />
+                    </Form.Item>
+
+                    <Form.Item
+                        {...tailLayout}
+                        name="sexOption"
+                        rules={[{
+                            required: true, message: 'Lütfen bir öğe seçin!'
+                        }]}
+                    >
+                        <Radio.Group>
+                            <Radio value={"woman"}> <img style={{ height: "32px" }} src={"../images/woman.png"}></img></Radio>
+                            <Radio value={"man"}><img style={{ height: "32px" }} src="../images/man.png"></img></Radio>
+                        </Radio.Group>
+                    </Form.Item>
+
+                    <Form.Item >
+                        <Button type="primary" htmlType="submit" block>Giriş</Button>
+                    </Form.Item>
+                </Form>
             </div>
         </div>
     )

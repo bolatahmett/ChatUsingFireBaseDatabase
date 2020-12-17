@@ -5,6 +5,10 @@ import { addChat } from '../redux/actions/action';
 import { addChatMessages } from '../redux/actions/action';
 import { chatMessagesListener } from '../Listener/listener';
 import ChatTabs from './ChatTabs';
+import { Col, Row, Tabs } from 'antd';
+import MessageContent from './MessageContent';
+
+const { TabPane } = Tabs;
 
 function ChatContent(props: any) {
 
@@ -17,7 +21,7 @@ function ChatContent(props: any) {
 
     useEffect(() => {
 
-        if (props.chatMessages && props.chatMessages.from !== props.userName) {
+        if (props.chatMessages && props.chatMessages.from !== props.userName && props.chatMessages.to === props.userName) {
             const checkIfExist = tabChatContent.filter((item) => {
                 if (item.key === props.chatMessages.from) {
                     return item;
@@ -45,7 +49,6 @@ function ChatContent(props: any) {
 
     }, [props.startedChatUser]);
 
-
     const changeTab = (activeKey: any) => {
         props.addChat(activeKey);
         setActiveTabKey(activeKey);
@@ -53,7 +56,23 @@ function ChatContent(props: any) {
 
     return (
         <>
-            <ChatTabs tabChatContent={tabChatContent} activeTabKey={activeTabKey} changeTab={changeTab}></ChatTabs>
+            <Tabs activeKey={activeTabKey} onChange={changeTab} type="line" size={"small"}>
+                {
+                    tabChatContent.length > 0 && tabChatContent.map((item: any) => {
+                        return <TabPane tab={<span style={{ color: "white" }}>{item.key}</span>} key={item.key}>
+                            <Row style={{ height: "100%" }}>
+                                <Col span={24} style={{ height: "100%" }}>
+                                    <div className="card-body msg_card_body" style={{ height: "100%" }}>
+                                        <div id={item.key} className="col-md-24" style={{ height: "100%" }}>
+                                            <MessageContent chatKey={item.key}></MessageContent>
+                                        </div>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </TabPane>
+                    })
+                }
+            </Tabs>
         </>
     )
 }

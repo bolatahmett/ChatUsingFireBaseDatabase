@@ -18,7 +18,7 @@ function ChatHeader(props: any) {
                     <li><i className="fas fa-plus"></i> Grup Ekle</li>
                     <li><i className="fas fa-ban"></i> Engelle</li>
                     <li onClick={clearHistory} > <i className="fas fa-trash"></i> Sohbeti Temizle</li>
-                    <li onClick={() => showUserOptions("a")}><i className="fas fa-filter"></i> Tercihler</li>
+                    <li onClick={() => showUserOptions("a", "", "")}><i className="fas fa-filter"></i> Tercihler</li>
                 </ul>
             </div>
         </div>
