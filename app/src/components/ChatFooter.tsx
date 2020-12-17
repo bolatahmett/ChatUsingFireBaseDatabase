@@ -1,8 +1,9 @@
 import React from 'react'
+import { connect } from 'react-redux';
 import { getUserInfoFromStorage, formatTime, clearHistoryFromDb } from '../helper/helper'
 import { database } from './firebase';
 
-export default function ChatFooter() {
+function ChatFooter(props: any) {
 
     const onKeyPressMessage = () => {
         var event = window.event;
@@ -29,7 +30,8 @@ export default function ChatFooter() {
                 from: userInfo.userName,
                 timeOfMessage: formattedTime,
                 color: userInfo.color,
-                sex: userInfo.sex
+                sex: userInfo.sex,
+                to: props.startedChatUser
             });
             setTimeout(() => {
                 clearHistoryFromDb();
@@ -57,3 +59,10 @@ export default function ChatFooter() {
         </div>
     )
 }
+
+const mapStateToProps = (state: any) => {
+    const startedChatUser = state.startChat;
+    return { startedChatUser };
+};
+
+export default connect(mapStateToProps, null)(ChatFooter);

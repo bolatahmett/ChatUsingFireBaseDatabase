@@ -1,12 +1,13 @@
 import React from 'react'
+import { connect } from 'react-redux';
 import { clearHistory, showMenu, showUserOptions } from '../helper/helper'
 
-export default function ChatHeader() {
+function ChatHeader(props: any) {
     return (
         <div className="card-header msg_head">
             <div className="d-flex bd-highlight">
                 <div className="user_info">
-                    <span style={{ fontFamily: "cursive" }}>Chat</span>
+                    <span style={{ fontFamily: "cursive" }}>Chat {props.userName}</span>
                 </div>
             </div>
             <span id="action_menu_btn"><i className="fas fa-ellipsis-v" onClick={showMenu}></i></span>
@@ -23,3 +24,10 @@ export default function ChatHeader() {
         </div>
     )
 }
+
+const mapStateToProps = (state: any) => {
+    const userName = state.user;
+    return { userName };
+};
+
+export default connect(mapStateToProps, null)(ChatHeader);

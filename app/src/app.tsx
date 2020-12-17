@@ -10,21 +10,18 @@ interface AppProps {
     userName?: string;
 }
 
-
 function App(props: AppProps) {
     return (
         <>
             <div className="container-fluid" style={{ height: "100%" }}>
                 <UserLogin></UserLogin>
-                {props.userName && <Chat userName={props.userName}></Chat>}
+                {props.userName && <Chat></Chat>}
             </div>
         </>
     )
-
 }
 
 const mapStateToProps = (state: any) => {
-    debugger;
     const userName = state.user;
     return { userName };
 };

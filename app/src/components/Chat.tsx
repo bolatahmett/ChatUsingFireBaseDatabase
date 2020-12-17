@@ -12,7 +12,7 @@ export default function Chat(props: any) {
             <div className="col-9 chat" style={{ height: "100%", paddingLeft: "0px", paddingRight: "0px" }}>
                 <div className="card" style={{ height: "100%" }}>
                     <ChatHeader></ChatHeader>
-                    <ChatContent userName={props.userName}></ChatContent>
+                    <ChatContent></ChatContent>
                     <ChatFooter></ChatFooter>
                 </div>
             </div>

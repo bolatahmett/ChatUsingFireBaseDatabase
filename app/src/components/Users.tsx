@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { connect } from 'react-redux';
 import { addBlockedIp, showUserOptions } from '../helper/helper';
 import { database } from './firebase';
+import { addChat } from '../redux/actions/action';
 
-export default function Users() {
+function Users(props: any) {
 
     const [contactItems, setContactItem] = useState([]);
+
+    useEffect(() => {
+        userLoad();
+    }, []);
 
     const userLoad = () => {
         database.ref("users").on('value', (snapshot: any) => {
@@ -19,9 +25,9 @@ export default function Users() {
         });
     }
 
-    useEffect(() => {
-        userLoad();
-    }, []);
+    const startChat = (userName: string) => {
+        props.addChat(userName);
+    }
 
     const getMessageItems = (contacts: any) => contacts.map((contactItem: any) => {
         return <li className="active">
@@ -31,7 +37,7 @@ export default function Users() {
             <div id={"options" + contactItem.kulid + ""} style={{ display: "none", cursor: "pointer" }} >
                 <ul style={{ listStyleType: "none" }}>
                     <li onClick={() => addBlockedIp(contactItem.ip, contactItem.username)}><i className="fas fa-comment-slash"></i> Engelle</li>
-                    <li><i className="fas fa-comment"></i> Mesaj Gönder</li>
+                    <li onClick={() => startChat(contactItem.username)}><i className="fas fa-comment"></i> Mesaj Gönder</li>
                 </ul>
             </div>
         </li>;
@@ -55,3 +61,12 @@ export default function Users() {
         </div>
     )
 }
+
+const mapStateToProps = (state: any) => {
+    const user = state.user;
+    return { user };
+};
+
+export default connect(mapStateToProps, {
+    addChat
+})(Users);

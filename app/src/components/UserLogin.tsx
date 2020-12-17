@@ -3,15 +3,18 @@ import { getColor, getGlobalUserInfo, setOnline, setUserInfoSessionStorage } fro
 import { database } from './firebase';
 import { connect } from 'react-redux';
 import { loginUser } from '../redux/actions/action';
+import { addChat } from '../redux/actions/action';
 
 interface UserLoginProps {
     loginUser: any;
+    addChat: any;
 }
 
 function UserLogin(props: UserLoginProps) {
 
     const loadChat = (userName: any, color: string) => {
         props.loginUser(userName);
+        props.addChat("Genel");
         $("#girisEkrani").hide();
         $("#chatEkrani").show();
     }
@@ -138,11 +141,11 @@ function UserLogin(props: UserLoginProps) {
 
 
 const mapStateToProps = (state: any) => {
-    debugger;
     const user = state.user;
     return { user };
 };
 
 export default connect(mapStateToProps, {
-    loginUser
+    loginUser,
+    addChat
 })(UserLogin);

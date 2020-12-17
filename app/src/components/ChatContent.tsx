@@ -1,101 +1,71 @@
-import React, { useEffect, useState } from 'react'
-import { showTimeOfMessage } from '../helper/helper';
-import { database } from './firebase';
-import { Col, Row, Tabs } from 'antd';
+import React, { useEffect, useReducer, useState } from 'react'
 import 'antd/dist/antd.css'
+import { connect } from 'react-redux';
+import { addChat } from '../redux/actions/action';
+import { addChatMessages } from '../redux/actions/action';
+import { chatMessagesListener } from '../Listener/listener';
+import ChatTabs from './ChatTabs';
 
-export default function ChatContent(props: any) {
-    const [messageItems, setMessageItems] = useState([]);
-    const { TabPane } = Tabs;
+function ChatContent(props: any) {
+
+    const [tabChatContent, setTabChatContent] = useState([]);
+    const [activeTabKey, setActiveTabKey] = useState("1");
 
     useEffect(() => {
-        chatYukle(props.userName);
+        chatMessagesListener(props.userName, props.addChatMessages);
     }, []);
 
-    const chatYukle = (userName: any) => {
+    useEffect(() => {
 
-        database.ref("chats").on('child_added', (snapshot: any) => {
-            var data = snapshot.val();
-            if (data.from == userName) {
-                const addedMessage = {
-                    key: snapshot.key,
-                    message: data.message,
-                    timeOfMessage: data.timeOfMessage
-                };
+        if (props.chatMessages && props.chatMessages.from !== props.userName) {
+            const checkIfExist = tabChatContent.filter((item) => {
+                if (item.key === props.chatMessages.from) {
+                    return item;
+                }
+            });
 
-                setMessageItems(prevMessages => ([...prevMessages, addedMessage]));
-
-            } else {
-                var ref = database.ref("users/" + data.from);
-                ref.once("value")
-                    .then((snapshot: any) => {
-                        if (snapshot.exists()) {
-                            const addedMessage = {
-                                key: snapshot.key,
-                                from: data.from,
-                                message: data.message,
-                                timeOfMessage: data.timeOfMessage,
-                                color: data.color,
-                                sex: data.sex
-                            };
-                            setMessageItems(prevMessages => ([...prevMessages, addedMessage]));
-                        }
-                    });
+            if (checkIfExist.length === 0) {
+                props.addChat(props.chatMessages.from);
             }
+        }
 
-            $(".card-body").scrollTop($('.card-body')[0].scrollHeight - $('.card-body')[0].clientHeight);
-        });
-    }
+    }, [props.chatMessages]);
 
-    const getMessageContent = () => {
-        return messageItems.map((item: any) => {
-            if (item.from) {
-                var imgurl = item.sex === "woman" ? "../images/woman.png" : "../images/man.png";
-                return <div className="d-flex">
-                    <div className="alert message-other" role="alert"
-                        onClick={() => showTimeOfMessage('`+ snapshot.key + `')}>
-                        <img style={{ height: "16px" }} src={imgurl}></img>
-                        <b style={{ color: item.color }} > {item.from + ":"} </b> {item.message}
-                        <div id="timeOfMessage` + snapshot.key + `" style={{ display: "none" }}> {item.timeOfMessage}</div>
-                    </div>
-                </div>;
-            } else {
-                return <div className="d-flex justify-content-end">
-                    <div className="alert message-me"
-                        role="alert"
-                        onClick={() => showTimeOfMessage(item.key)} >{item.message}
-                        <div id={"timeOfMessage" + item.key} style={{ display: "none" }} >
-                            {item.timeOfMessage}
-                        </div>
-                    </div>
-                </div>;
+    useEffect(() => {
+        const checkIfExist = tabChatContent.filter((item) => {
+            if (item.key === props.startedChatUser) {
+                return item;
             }
         });
-    }
+
+        if (props.startedChatUser && checkIfExist.length === 0) {
+            setTabChatContent(prevChat => ([...prevChat, { key: props.startedChatUser }]));
+            setActiveTabKey(props.startedChatUser);
+        }
+
+    }, [props.startedChatUser]);
+
+
+    const changeTab = (activeKey: any) => {
+        props.addChat(activeKey);
+        setActiveTabKey(activeKey);
+    };
 
     return (
         <>
-            <Tabs defaultActiveKey="1" type="line" size={"small"}>
-                <TabPane tab={<span style={{ color: "white" }}>Genel</span>} key="1">
-                    <Row style={{ height: "100%" }}>
-                        <Col span={24} style={{ height: "100%" }}>
-                            <div className="card-body msg_card_body" style={{ height: "100%" }}>
-                                <div id="mesajAlani" className="col-md-24" style={{ height: "100%" }}>
-                                    {getMessageContent()}
-                                </div>
-                            </div>
-                        </Col>
-                    </Row>
-                </TabPane>
-                <TabPane tab={<span style={{ color: "white" }}>Ahmet</span>} key="2">
-                    <div className="card-body msg_card_body">
-                    </div>
-                </TabPane>
-                <TabPane tab={<span style={{ color: "white" }}>Ahmet2</span>} key="3">
-                    <div className="card-body msg_card_body">
-                    </div>
-                </TabPane>
-            </Tabs>
+            <ChatTabs tabChatContent={tabChatContent} activeTabKey={activeTabKey} changeTab={changeTab}></ChatTabs>
         </>
     )
 }
+
+const mapStateToProps = (state: any) => {
+    const startedChatUser = state.startChat;
+    const userName = state.user;
+    const chatMessages = state.chatMessages;
+    return { startedChatUser, userName, chatMessages };
+};
+
+export default connect(mapStateToProps, {
+    addChat,
+    addChatMessages
+})(ChatContent);
