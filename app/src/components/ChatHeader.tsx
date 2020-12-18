@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { connect } from 'react-redux';
 import { clearHistory, showMenu, showUserOptions } from '../helper/helper'
+import UserContext from './UserContext';
 
-function ChatHeader(props: any) {
+function ChatHeader() {
+    const context = useContext(UserContext)
     return (
+
         <div className="card-header msg_head">
             <div className="d-flex bd-highlight">
                 <div className="user_info">
-                    <span style={{ fontFamily: "cursive" }}>Chat {props.userName}</span>
+                    <span style={{ fontFamily: "cursive" }}>Chat {context.userName}</span>
                 </div>
             </div>
             <span id="action_menu_btn"><i className="fas fa-ellipsis-v" onClick={showMenu}></i></span>
@@ -25,9 +28,4 @@ function ChatHeader(props: any) {
     )
 }
 
-const mapStateToProps = (state: any) => {
-    const userName = state.user;
-    return { userName };
-};
-
-export default connect(mapStateToProps, null)(ChatHeader);
+export default ChatHeader;

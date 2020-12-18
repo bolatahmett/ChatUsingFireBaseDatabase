@@ -2,13 +2,19 @@ import React, { useEffect, useReducer } from 'react'
 import { connect } from 'react-redux';
 import { showTimeOfMessage } from '../helper/helper';
 
+interface MessageContentProps {
+    chatMessages: {};
+    chatKey: string;
+    userName: string;
+}
+
 const reducer = (currentState: any, action: any) => {
     if (action.type === "add") {
         return [...currentState, action.payload];
     }
 }
 
-function MessageContent(props: any) {
+function MessageContent(props: MessageContentProps) {
     const [messageItems, dispatch] = useReducer(reducer, []);
 
     useEffect(() => {
@@ -44,7 +50,6 @@ function MessageContent(props: any) {
                     </div>;
                 }
             }
-
         })}
     </>)
 }

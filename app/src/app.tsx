@@ -3,6 +3,7 @@ import './index.css';
 import UserLogin from './components/UserLogin';
 import Chat from './components/chat';
 import { connect } from 'react-redux';
+import UserContext from './components/UserContext';
 
 interface AppProps {
     firebase: any;
@@ -10,12 +11,17 @@ interface AppProps {
     userName?: string;
 }
 
+
 function App(props: AppProps) {
     return (
         <>
             <div className="container-fluid" style={{ height: "100%" }}>
                 <UserLogin></UserLogin>
-                {props.userName && <Chat></Chat>}
+                {props.userName &&
+                    <UserContext.Provider value={{ userName: props.userName }}>
+                        <Chat />
+                    </UserContext.Provider>
+                }
             </div>
         </>
     )

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { getUserInfoFromStorage, formatTime, clearHistoryFromDb } from '../helper/helper'
+import { getUserInfoFromStorage, formatTime } from '../helper/helper'
 import { database } from './firebase';
 
 function ChatFooter(props: any) {
@@ -33,9 +33,7 @@ function ChatFooter(props: any) {
                 sex: userInfo.sex,
                 to: props.startedChatUser
             });
-            setTimeout(() => {
-                clearHistoryFromDb();
-            }, 80000);
+
             $("#mesaj").val('');
 
         } else {
