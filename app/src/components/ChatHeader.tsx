@@ -10,7 +10,7 @@ function ChatHeader() {
         <div className="card-header msg_head">
             <div className="d-flex bd-highlight">
                 <div className="user_info">
-                    <span style={{ fontFamily: "cursive" }}>Chat {context.userName}</span>
+                    <span style={{ fontFamily: "cursive" }}>Chat {context.user.userName}</span>
                 </div>
             </div>
             <span id="action_menu_btn"><i className="fas fa-ellipsis-v" onClick={showMenu}></i></span>

@@ -17,12 +17,12 @@ function ChatContent(props: any) {
     const [activeTabKey, setActiveTabKey] = useState("1");
 
     useEffect(() => {
-        chatMessagesListener(context.userName, props.addChatMessages);
+        chatMessagesListener(context.user.userName, props.addChatMessages);
     }, []);
 
     useEffect(() => {
 
-        if (props.chatMessages && props.chatMessages.from !== context.userName && props.chatMessages.to === context.userName) {
+        if (props.chatMessages && props.chatMessages.from !== context.user.userName && props.chatMessages.to === context.user.userName) {
             const checkIfExist = tabChatContent.filter((item) => {
                 if (item.key === props.chatMessages.from) {
                     return item;
@@ -60,7 +60,6 @@ function ChatContent(props: any) {
             <Tabs activeKey={activeTabKey} onChange={changeTab} type="line" size={"small"}>
                 {
                     tabChatContent.length > 0 && tabChatContent.map((item: any) => {
-                        debugger;
                         return <TabPane tab={<TabNotification tabTitle={item.key} hasNewMessage={false} />} key={item.key}>
                             <Row style={{ height: "100%" }}>
                                 <Col span={24} style={{ height: "100%" }}>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
-import { addBlockedIp, showUserOptions } from '../helper/helper';
+import { showUserOptions } from '../helper/helper';
 import { database } from './firebase';
-import { addChat } from '../redux/actions/action';
+import { addChat, addBlockedUser, removeBlockedUser } from '../redux/actions/action';
 
 function Users(props: any) {
 
@@ -14,12 +14,18 @@ function Users(props: any) {
 
     const userLoad = () => {
         database.ref("users").on('value', (snapshot: any) => {
-            let changedContextItems: any = [];
+            let changedContextItems: UserModel[] = [];
             snapshot.forEach((childSnapshot: any) => {
-                var data = childSnapshot.val();
-                if (data.online === 1) {
-                    changedContextItems.push(data);
-                }
+                const data = childSnapshot.val();
+                data.online === 1 && changedContextItems.push({
+                    key: data.key,
+                    userName: data.userName,
+                    password: "",
+                    ip: data.ip,
+                    sex: data.sex,
+                    color: data.color
+                } as UserModel);
+
             });
             setContactItem(changedContextItems);
         });
@@ -29,18 +35,22 @@ function Users(props: any) {
         props.addChat(userName);
     }
 
-    const getMessageItems = (contacts: any) => contacts.map((contactItem: any) => {
-        return <li className="active">
-            <div className="user_info" onClick={() => showUserOptions(contactItem.kulid, contactItem.username, props.user)}>
-                <p className="fas fa-user" style={{ marginTop: "revert", marginBottom: "revert", color: contactItem.color }} >  {contactItem.username} </p>
+    const getContactItems = () => contactItems.map((contactItem: UserModel) => {
+        return <li className="active" key={contactItem.key}>
+            <div className="user_info" onClick={() => showUserOptions(contactItem.key, contactItem.userName, props.user.userName)}>
+                <p className="fas fa-user" style={{ marginTop: "revert", marginBottom: "revert", color: contactItem.color }} >  {contactItem.userName} </p>
             </div>
-            <div id={"options" + contactItem.kulid + ""} style={{ display: "none", cursor: "pointer" }} >
+            <div id={"options" + contactItem.key + ""} style={{ display: "none", cursor: "pointer" }} >
                 <ul style={{ listStyleType: "none" }}>
-                    {/* <li onClick={() => addBlockedIp(contactItem.ip, contactItem.username)}><i className="fas fa-comment-slash"></i> Engelle</li> */}
-                    <li onClick={() => startChat(contactItem.username)}><i className="fas fa-comment"></i> Mesaj Gönder</li>
+                    {
+                        props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === contactItem.userName)
+                            ? <li onClick={() => { props.removeBlockedUser(contactItem); }}><i className="fas fa-user"></i> İzin Ver</li>
+                            : <li onClick={() => { props.addBlockedUser(contactItem); }}><i className="fas fa-user-slash"></i> Engelle</li>
+                    }
+                    <li onClick={() => startChat(contactItem.userName)}><i className="fas fa-comment"></i> Mesaj Gönder</li>
                 </ul>
             </div>
-        </li>;
+        </li >;
     });
 
     return (
@@ -53,7 +63,7 @@ function Users(props: any) {
                 </div>
                 <div style={{ height: "100%" }}>
                     <ul id="contacts" className="contacts">
-                        {getMessageItems(contactItems)}
+                        {getContactItems()}
                     </ul>
                 </div>
                 <div className="card-footer"></div>
@@ -64,9 +74,12 @@ function Users(props: any) {
 
 const mapStateToProps = (state: any) => {
     const user = state.user;
-    return { user };
+    const blockedUsers = state.blockedUsers;
+    return { user, blockedUsers };
 };
 
 export default connect(mapStateToProps, {
-    addChat
+    addChat,
+    addBlockedUser,
+    removeBlockedUser
 })(Users);

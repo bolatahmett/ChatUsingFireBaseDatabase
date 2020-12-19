@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { getColor, getGlobalUserInfo, setOnline, setUserInfoSessionStorage } from "../helper/helper";
 import { database } from './firebase';
 import { connect } from 'react-redux';
 import { loginUser } from '../redux/actions/action';
 import { addChat } from '../redux/actions/action';
-import { Radio, message, Form, Input, Button, Checkbox } from 'antd';
+import { Radio, message, Form, Input, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 interface UserLoginProps {
@@ -18,9 +18,7 @@ const tailLayout = {
 
 function UserLogin(props: UserLoginProps) {
 
-
     const onFinish = (values: any) => {
-        console.log('Success:', values);
         login(values.username, values.password, values.sexOption);
     };
 
@@ -28,8 +26,8 @@ function UserLogin(props: UserLoginProps) {
         console.log('Failed:', errorInfo);
     };
 
-    const loadChat = (userName: any, color: string) => {
-        props.loginUser(userName);
+    const loadChat = (user: UserModel) => {
+        props.loginUser(user);
         props.addChat("Genel");
         $("#girisEkrani").hide();
         $("#chatEkrani").show();
@@ -38,9 +36,9 @@ function UserLogin(props: UserLoginProps) {
     const saveUser = (user: { userName: any; password: any; ip: any; sex: any; color: any; }) => {
         var userKey = database.ref("users/" + user.userName).push().key; //Rastgele bir userkey gönderir.
         database.ref("users/" + user.userName).set({
-            username: user.userName,
+            userName: user.userName,
             password: user.password,
-            kulid: userKey,
+            key: userKey,
             sex: user.sex,
             online: 1,
             color: user.color,
@@ -51,9 +49,10 @@ function UserLogin(props: UserLoginProps) {
     const login = (userName: string, password: string, sex: string) => {
         password = password === undefined ? "" : password;
         var ip = getGlobalUserInfo();
-        var user = {
+        let user: UserModel = {
+            key: "",
             userName: userName,
-            password: password,
+            password: "",
             ip: ip,
             sex: sex,
             color: ""
@@ -65,30 +64,29 @@ function UserLogin(props: UserLoginProps) {
                 message.warning("Kullanıcı girişi yasaklandı!!!");
             } else {
 
-                var ref = database.ref("users/" + userName);
+                let ref = database.ref("users/" + userName);
                 ref.once("value")
                     .then((snapshot: any) => {
-                        var name = snapshot.child("username").val() as unknown as string;
-                        var color = snapshot.child("color").val() as unknown as string;
-                        user.color = getColor();
+                        let name = snapshot.child("username").val() as unknown as string;
+                        let color = snapshot.child("color").val() as unknown as string;
+                        user.color = color ? color : getColor();
+
                         if (name === null) {
                             saveUser(user);
-                            setUserInfoSessionStorage(user);
-                            loadChat(userName, user.color);
                         } else if (snapshot.child("online").val() == 1) {
                             message.warning("Kullanıcı şuan online. Farklı bir kullanıcı ile giriş yapınız!");
+                            return;
                         } else {
-
-                            var pass = snapshot.child("password").val();
-                            if (pass === 0 || (pass === password)) {
+                            var passwordFromDb = snapshot.child("password").val();
+                            if (passwordFromDb === 0 || (passwordFromDb === password)) {
                                 setOnline(userName, 1);
-                                loadChat(userName, color);
-                                user.color = user.color ? user.color : getColor();
-                                setUserInfoSessionStorage(user);
                             } else {
                                 message.warning("Hatalı şifre!");
+                                return;
                             }
                         }
+
+                        loadChat(user);
                     });
             }
         });

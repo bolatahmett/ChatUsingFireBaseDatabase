@@ -8,7 +8,7 @@ import UserContext from './components/UserContext';
 interface AppProps {
     firebase: any;
     database: any;
-    userName?: string;
+    user: UserModel;
 }
 
 
@@ -17,8 +17,8 @@ function App(props: AppProps) {
         <>
             <div className="container-fluid" style={{ height: "100%" }}>
                 <UserLogin></UserLogin>
-                {props.userName &&
-                    <UserContext.Provider value={{ userName: props.userName }}>
+                {props.user &&
+                    <UserContext.Provider value={{ user: props.user }}>
                         <Chat />
                     </UserContext.Provider>
                 }
@@ -28,8 +28,8 @@ function App(props: AppProps) {
 }
 
 const mapStateToProps = (state: any) => {
-    const userName = state.user;
-    return { userName };
+    const user = state.user;
+    return { user };
 };
 
 export default connect(mapStateToProps, null)(App);

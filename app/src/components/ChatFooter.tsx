@@ -1,9 +1,13 @@
 import React from 'react'
+import { useContext } from 'react';
 import { connect } from 'react-redux';
 import { getUserInfoFromStorage, formatTime } from '../helper/helper'
 import { database } from './firebase';
+import UserContext from './UserContext';
 
 function ChatFooter(props: any) {
+
+    const context = useContext(UserContext)
 
     const onKeyPressMessage = () => {
         var event = window.event;
@@ -20,17 +24,16 @@ function ChatFooter(props: any) {
 
     const mesajGonder = () => {
         var mesaj = $("#mesaj").val();
-        var userInfo = getUserInfoFromStorage();
 
-        if (userInfo.userName != "" && mesaj != "") {
+        if (context.user.userName != "" && mesaj != "") {
             var formattedTime = formatTime(new Date());
             var messageKey = database.ref("chats/").push().key;
             database.ref("chats/" + messageKey).set({
                 message: mesaj,
-                from: userInfo.userName,
+                from: context.user.userName,
                 timeOfMessage: formattedTime,
-                color: userInfo.color,
-                sex: userInfo.sex,
+                color: context.user.color,
+                sex: context.user.sex,
                 to: props.startedChatUser
             });
 

@@ -27,10 +27,10 @@ const setupBeforeUnloadListener = (userName: string) => {
 
 export default function Chat() {
 
-    const context = useContext(UserContext)
+    const context = useContext(UserContext);
 
     useEffect(() => {
-        setupBeforeUnloadListener(context.userName);
+        setupBeforeUnloadListener(context.user.userName);
     });
 
     return (
