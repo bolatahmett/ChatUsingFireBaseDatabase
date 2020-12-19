@@ -30,6 +30,5 @@ export const chatMessagesListener = (userName: any, addChatMessage: any) => {
                     }
                 });
         }
-        $(".card-body").scrollTop($('.card-body')[0].scrollHeight - $('.card-body')[0].clientHeight);
     });
 }

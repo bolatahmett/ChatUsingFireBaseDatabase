@@ -27,6 +27,10 @@ function MessageContent(props: MessageContentProps) {
 
     }, [props.blockedUsers]);
 
+    useEffect(() => {
+        $(".card-body").scrollTop($('.card-body')[0].scrollHeight - $('.card-body')[0].clientHeight);
+    });
+
     const handleAddMessage = (message: any) => {
         dispatch({
             type: "add",
