@@ -53,7 +53,9 @@ function MessageContent(props: MessageContentProps) {
                                 <div className="alert message-other" role="alert" onClick={() => showTimeOfMessage(item.key)} >
                                     <img style={{ height: "16px" }} src={imgurl}></img>
                                     <b style={{ color: item.color }} > {item.from + ":"} </b> {item.message}
-                                    <div id="timeOfMessage` + snapshot.key + `" style={{ display: "none" }}> {item.timeOfMessage}</div>
+                                    <div id={"timeOfMessage" + item.key} style={{ display: "none" }} >
+                                        {item.timeOfMessage}
+                                    </div>
                                 </div>
                             </div>;
                         } else {
