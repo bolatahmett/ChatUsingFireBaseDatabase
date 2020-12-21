@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { showUserOptions } from '../helper/helper';
 import { database } from './firebase';
 import { addChat, addBlockedUser, removeBlockedUser } from '../redux/actions/action';
+import { Menu } from 'antd';
+import { MessageOutlined, UserOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
+const { SubMenu } = Menu;
+const rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 
 function Users(props: any) {
 
@@ -35,36 +39,58 @@ function Users(props: any) {
         props.addChat(userName);
     }
 
-    const getContactItems = () => contactItems.map((contactItem: UserModel) => {
-        return <li className="active" key={contactItem.key}>
-            <div className="user_info" onClick={() => showUserOptions(contactItem.key, contactItem.userName, props.user.userName)}>
-                <p className="fas fa-user" style={{ marginTop: "revert", marginBottom: "revert", color: contactItem.color }} >  {contactItem.userName} </p>
-            </div>
-            <div id={"options" + contactItem.key + ""} style={{ display: "none", cursor: "pointer" }} >
-                <ul style={{ listStyleType: "none" }}>
-                    {
-                        props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === contactItem.userName)
-                            ? <li onClick={() => { props.removeBlockedUser(contactItem); }}><i className="fas fa-user"></i> İzin Ver</li>
-                            : <li onClick={() => { props.addBlockedUser(contactItem); }}><i className="fas fa-user-slash"></i> Engelle</li>
-                    }
-                    <li onClick={() => startChat(contactItem.userName)}><i className="fas fa-comment"></i> Mesaj Gönder</li>
-                </ul>
-            </div>
-        </li >;
+    const getContactItemsForMenu = () => contactItems.map((contactItem: UserModel) => {
+
+        const contentContact = contactItem.userName === props.user.userName
+            ? <Menu.Item key={contactItem.key} icon={<UserOutlined />} style={{ color: contactItem.color }}>{contactItem.userName}</Menu.Item>
+            : <SubMenu key={contactItem.key} icon={<UserOutlined />} title={contactItem.userName} style={{ color: contactItem.color }}>
+                <Menu.Item key={`sendMessage${contactItem.key}`} icon={<MessageOutlined />} onClick={() => startChat(contactItem.userName)} >Mesaj Gönder</Menu.Item>
+                {
+                    props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === contactItem.userName)
+                        ? <Menu.Item key={`blockUser${contactItem.key}`} icon={<EyeOutlined />} onClick={() => { props.removeBlockedUser(contactItem); }} >İzin Ver</Menu.Item>
+                        : <Menu.Item key={`blockUser${contactItem.key}`} icon={<EyeInvisibleOutlined />} onClick={() => { props.addBlockedUser(contactItem); }} >Engelle</Menu.Item>
+                }
+            </SubMenu>;
+
+        return contentContact;
     });
+
+
+    const [openKeys, setOpenKeys] = React.useState(['sub1']);
+
+    const onOpenChange = (keys: any) => {
+        const latestOpenKey = keys.find((key: string) => openKeys.indexOf(key) === -1);
+        if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+            setOpenKeys(keys);
+        } else {
+            setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+        }
+    };
 
     return (
 
         <div className="col-3 chat" style={{ height: "100%", paddingRight: "0px", paddingLeft: "0px" }}>
             <div className="card mb-sm-3 mb-md-0 contacts_card" style={{ height: "100%" }}>
-                <div className="form-group has-search">
-                    <span className="fa fa-search form-control-feedback"></span>
-                    <input type="text" className="form-control search" placeholder="Search" name=""></input>
-                </div>
-                <div style={{ height: "100%" }}>
-                    <ul id="contacts" className="contacts">
+                <div style={{
+                    height: "100%",
+                    paddingTop: "54px",
+                    paddingBottom: "45px"
+                }}>
+                    <div className="form-group has-search">
+                        <span className="fa fa-search form-control-feedback"></span>
+                        <input type="text" className="form-control search" placeholder="Search" name=""></input>
+                    </div>
+                    {/* <ul id="contacts" className="contacts">
                         {getContactItems()}
-                    </ul>
+                    </ul> */}
+                    <Menu mode="inline"
+                        openKeys={openKeys}
+                        onOpenChange={onOpenChange}
+                        inlineIndent={5}
+                        className={"chat-menu"}
+                    >
+                        {getContactItemsForMenu()}
+                    </Menu>
                 </div>
                 <div className="card-footer"></div>
             </div>

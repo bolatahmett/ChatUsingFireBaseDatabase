@@ -2,7 +2,7 @@
 			height: 100%;
 			margin: 0;
 			background: #7F7FD5;
-	       background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+	       	background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
 	        background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
 		}
 
@@ -244,6 +244,12 @@
 		cursor: pointer;
 		background-color: rgba(0,0,0,0.2);
 	}
+
+	.has-search {
+		    padding-left: 10px;
+    padding-right: 10px;
+	}
+
 	.has-search .form-control {
     padding-left: 2.375rem;
 }
@@ -284,4 +290,14 @@ background-size: cover;} */
 
 .ant-tabs.ant-tabs-top.ant-tabs-small{
 		height: 100% !important;
+}
+
+.ant-menu {
+	font-size: x-small !important;
+	background-color: lightslategray;
+}
+
+.chat-menu {
+		/* background: #557d89 !important; */
+		border-radius: 8px;
 }

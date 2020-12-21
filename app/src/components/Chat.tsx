@@ -36,6 +36,7 @@ export default function Chat() {
     return (
 
         <div id="chatEkrani" className="row" style={{ height: "100%", display: "none" }} >
+            <Users></Users>
             <div className="col-9 chat" style={{ height: "100%", paddingLeft: "0px", paddingRight: "0px" }}>
                 <div className="card" style={{ height: "100%" }}>
                     <ChatHeader></ChatHeader>
@@ -43,7 +44,6 @@ export default function Chat() {
                     <ChatFooter></ChatFooter>
                 </div>
             </div>
-            <Users></Users>
         </div>
     )
 }
