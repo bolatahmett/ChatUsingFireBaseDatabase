@@ -41,31 +41,40 @@ function MessageContent(props: MessageContentProps) {
     return (
         <>
             {
-                messageItems.map((item: any) => {
+                messageItems.map((item: any, index: number) => {
+                    const uniqueKey = `${item.key}${index}`;
                     const isBlockedUser = props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === item.from);
                     if (((
                         item.to === props.chatKey && props.chatKey === "Genel")
                         || (item.from === props.chatKey && item.to === context.user.userName)
                         || (item.to === props.chatKey && item.from === context.user.userName)) && !isBlockedUser) {
+
                         if (item.from !== context.user.userName) {
                             var imgurl = item.sex === "woman" ? "../images/woman.png" : "../images/man.png";
-                            return <div className="d-flex">
-                                <div className="alert message-other" role="alert" onClick={() => showTimeOfMessage(item.key)} >
-                                    <img style={{ height: "16px" }} src={imgurl}></img>
-                                    <b style={{ color: item.color }} > {item.from + ":"} </b> {item.message}
-                                    <div id={"timeOfMessage" + item.key} style={{ display: "none" }} >
-                                        {item.timeOfMessage}
+
+                            return (
+                                <div className="d-flex">
+                                    <div className="message-other" role="alert" onClick={() => showTimeOfMessage(uniqueKey)} >
+                                        <img style={{ height: "16px" }} src={imgurl}></img>
+                                        <b style={{ color: item.color }} > {item.from + ":"} </b> {item.message}
+                                        <div id={"timeOfMessage" + uniqueKey} style={{ display: "none" }} >
+                                            {item.timeOfMessage}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>;
+                            );
+
                         } else {
-                            return <div className="d-flex justify-content-end">
-                                <div className="alert message-me" role="alert" onClick={() => showTimeOfMessage(item.key)} >{item.message}
-                                    <div id={"timeOfMessage" + item.key} style={{ display: "none" }} >
-                                        {item.timeOfMessage}
+
+                            return (
+                                <div className="d-flex justify-content-end">
+                                    <div className="message-me" role="alert" onClick={() => showTimeOfMessage(uniqueKey)} >{item.message}
+                                        <div id={"timeOfMessage" + uniqueKey} style={{ display: "none" }} >
+                                            {item.timeOfMessage}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>;
+                            );
                         }
                     }
                 })}

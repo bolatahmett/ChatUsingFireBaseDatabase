@@ -10,8 +10,8 @@ export default function TabNotification(props: TabNotificationProps) {
     return (
         <>
             {props.hasNewMessage
-                ? <span style={{ color: "white", backgroundColor: "red" }}>{props.tabTitle}</span>
-                : <span style={{ color: "white" }}>{props.tabTitle}</span>}
+                ? <span style={{ backgroundColor: "red" }}>{props.tabTitle}</span>
+                : <span >{props.tabTitle}</span>}
         </>
     )
 }

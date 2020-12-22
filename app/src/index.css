@@ -12,6 +12,7 @@
 		}
 		.card{
 			background-color: rgba(0,0,0,0.4) !important;
+			border-radius: 0%;
 		}
 		.contacts_body{
 			padding:  0.75rem 0 !important;
@@ -21,7 +22,7 @@
 		.msg_card_body{
             overflow-y: auto;
 			font-size: x-small;
-			background-color: white;
+			background-color: ghostwhite;
 			height: "100%";
 		}
 
@@ -29,7 +30,7 @@
   			.msg_card_body{
             	overflow-y: auto;
 				font-size: small;
-				background-color: white;
+				background-color: ghostwhite;
 			}
 		}
 		.message-other{
@@ -41,12 +42,14 @@
     		border-radius: 20px;
 		}
 		.card-header{
-			border-radius: 15px 15px 0 0 !important;
+		 
 			border-bottom: 0 !important;
+			padding-bottom: 0 !important;
 		}
 	 .card-footer{
-		border-radius: 0 0 15px 15px !important;
+			border-radius: 0 0 15px 15px !important;
 			border-top: 0 !important;
+			padding: .75rem .5rem !important;
 	}
 		.container{
 			align-content: center;
@@ -86,6 +89,7 @@
 			border:0 !important;
 			color: white !important;
 			cursor: pointer;
+			font-size: small;
 		}
 		.search_btn{
 			border-radius: 0 15px 15px 0 !important;
@@ -246,14 +250,17 @@
 	}
 
 	.has-search {
-		    padding-left: 10px;
-    padding-right: 10px;
+		    padding-left: 0.25rem !important;
+    		padding-right: 0.25rem !important;
+    		padding-top: 0.25rem !important;
 	}
 
 	.has-search .form-control {
     padding-left: 2.375rem;
 }
-
+.form-group {
+    margin-bottom: 0.75rem !important;
+}
 .has-search .form-control-feedback {
     position: absolute;
     z-index: 2;
@@ -298,6 +305,14 @@ background-size: cover;} */
 }
 
 .chat-menu {
-		/* background: #557d89 !important; */
-		border-radius: 8px;
+	    background-color: ghostwhite !important;
+}
+
+.ant-menu-vertical .ant-menu-item, .ant-menu-vertical-left .ant-menu-item, .ant-menu-vertical-right .ant-menu-item, .ant-menu-inline .ant-menu-item, .ant-menu-vertical .ant-menu-submenu-title, .ant-menu-vertical-left .ant-menu-submenu-title, .ant-menu-vertical-right .ant-menu-submenu-title, .ant-menu-inline .ant-menu-submenu-title{
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+}
+
+.ant-menu-submenu-expand-icon, .ant-menu-submenu-arrow {
+	visibility: hidden;
 }

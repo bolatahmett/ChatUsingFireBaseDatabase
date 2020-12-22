@@ -86,6 +86,7 @@ export const formatTime = (date: string | number | Date) => {
 }
 
 export const getGlobalUserInfo = () => {
+    return "";
     $.ajaxSetup({
         async: false
     });

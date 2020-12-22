@@ -15,7 +15,7 @@ interface AppProps {
 function App(props: AppProps) {
     return (
         <>
-            <div className="container-fluid" style={{ height: "100%" }}>
+            <div style={{ height: "100%" }}>
                 <UserLogin></UserLogin>
                 {props.user &&
                     <UserContext.Provider value={{ user: props.user }}>

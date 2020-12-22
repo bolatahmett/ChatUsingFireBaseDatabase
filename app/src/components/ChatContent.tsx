@@ -55,22 +55,38 @@ function ChatContent(props: any) {
         setActiveTabKey(activeKey);
     };
 
+    const onEdit = (targetKey: any, action: any) => {
+        eval(action)(targetKey);
+    };
+
+    const remove = (targetKey: any) => {
+        const otherTabChatContent = tabChatContent.filter((item) => {
+            if (item.key !== targetKey) {
+                return item;
+            }
+        });
+        setTabChatContent(otherTabChatContent);
+        otherTabChatContent.length > 0 && setActiveTabKey(otherTabChatContent[otherTabChatContent.length - 1].key);
+    };
+
     return (
         <>
-            <Tabs activeKey={activeTabKey} onChange={changeTab} type="line" size={"small"}>
+            <Tabs activeKey={activeTabKey} type="editable-card" size={"small"} hideAdd onChange={changeTab} onEdit={onEdit} >
                 {
                     tabChatContent.length > 0 && tabChatContent.map((item: any) => {
-                        return <TabPane tab={<TabNotification tabTitle={item.key} hasNewMessage={false} />} key={item.key}>
-                            <Row style={{ height: "100%" }}>
-                                <Col span={24} style={{ height: "100%" }}>
-                                    <div className="card-body msg_card_body" style={{ height: "100%" }}>
-                                        <div id={item.key} className="col-md-24" style={{ height: "100%" }}>
-                                            <MessageContent chatKey={item.key}></MessageContent>
+                        return (
+                            <TabPane closable={item.key !== "Genel"} tab={<TabNotification tabTitle={item.key} hasNewMessage={false} />} key={item.key}>
+                                <Row style={{ height: "100%" }}>
+                                    <Col span={24} style={{ height: "100%" }}>
+                                        <div className="card-body msg_card_body" style={{ height: "100%" }}>
+                                            <div id={item.key} className="col-md-24" style={{ height: "100%" }}>
+                                                <MessageContent chatKey={item.key}></MessageContent>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Col>
-                            </Row>
-                        </TabPane>
+                                    </Col>
+                                </Row>
+                            </TabPane>
+                        )
                     })
                 }
             </Tabs >

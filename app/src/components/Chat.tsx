@@ -6,6 +6,7 @@ import ChatContent from './ChatContent';
 import Users from './Users';
 import { setOnline } from '../helper/helper';
 import UserContext from './UserContext';
+import { Col, Row } from 'antd';
 
 
 // Things to do before unloading/closing the tab
@@ -34,16 +35,26 @@ export default function Chat() {
     });
 
     return (
-
-        <div id="chatEkrani" className="row" style={{ height: "100%", display: "none" }} >
-            <Users></Users>
-            <div className="col-9 chat" style={{ height: "100%", paddingLeft: "0px", paddingRight: "0px" }}>
-                <div className="card" style={{ height: "100%" }}>
+        <>
+            <Row style={{ height: "50px" }}>
+                <Col span={24} className="card" >
                     <ChatHeader></ChatHeader>
-                    <ChatContent></ChatContent>
-                    <ChatFooter></ChatFooter>
-                </div>
-            </div>
-        </div>
+                </Col>
+            </Row>
+
+            <Row id="chatEkrani" justify="center" style={{ height: "calc(100% - 50px)", display: "none" }}>
+                <Col xs={6} sm={6} md={3} lg={3} xl={3} className="chat" style={{ height: "100%" }}>
+                    <div className="card mb-sm-3 mb-md-0 contacts_card" style={{ height: "100%" }}>
+                        <Users></Users>
+                    </div>
+                </Col>
+                <Col xs={18} sm={18} md={21} lg={21} xl={21} className="chat" style={{ height: "100%" }}>
+                    <div className="card" style={{ height: "100%" }}>
+                        <ChatContent></ChatContent>
+                        <ChatFooter></ChatFooter>
+                    </div>
+                </Col>
+            </Row>
+        </>
     )
 }

@@ -11,6 +11,7 @@ const rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 function Users(props: any) {
 
     const [contactItems, setContactItem] = useState([]);
+    const [searchItem, setSearchItem] = useState("")
 
     useEffect(() => {
         userLoad();
@@ -39,16 +40,19 @@ function Users(props: any) {
         props.addChat(userName);
     }
 
-    const getContactItemsForMenu = () => contactItems.map((contactItem: UserModel) => {
+    const getContactItemsForMenu = () => contactItems.filter((item: UserModel) => {
+        if (item.userName.includes(searchItem))
+            return item;
+    }).map((contactItem: UserModel) => {
 
         const contentContact = contactItem.userName === props.user.userName
-            ? <Menu.Item key={contactItem.key} icon={<UserOutlined />} style={{ color: contactItem.color }}>{contactItem.userName}</Menu.Item>
-            : <SubMenu key={contactItem.key} icon={<UserOutlined />} title={contactItem.userName} style={{ color: contactItem.color }}>
-                <Menu.Item key={`sendMessage${contactItem.key}`} icon={<MessageOutlined />} onClick={() => startChat(contactItem.userName)} >Mesaj Gönder</Menu.Item>
+            ? <Menu.Item key={contactItem.userName} style={{ color: contactItem.color }}>{contactItem.userName}</Menu.Item>
+            : <SubMenu key={contactItem.userName} title={contactItem.userName} style={{ color: contactItem.color }}>
+                <Menu.Item key={`sendMessage${contactItem.userName}`} icon={<MessageOutlined />} onClick={() => startChat(contactItem.userName)} >Mesaj Gönder</Menu.Item>
                 {
                     props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === contactItem.userName)
-                        ? <Menu.Item key={`blockUser${contactItem.key}`} icon={<EyeOutlined />} onClick={() => { props.removeBlockedUser(contactItem); }} >İzin Ver</Menu.Item>
-                        : <Menu.Item key={`blockUser${contactItem.key}`} icon={<EyeInvisibleOutlined />} onClick={() => { props.addBlockedUser(contactItem); }} >Engelle</Menu.Item>
+                        ? <Menu.Item key={`blockUser${contactItem.userName}`} icon={<EyeOutlined />} onClick={() => { props.removeBlockedUser(contactItem); }} >İzin Ver</Menu.Item>
+                        : <Menu.Item key={`blockUser${contactItem.userName}`} icon={<EyeInvisibleOutlined />} onClick={() => { props.addBlockedUser(contactItem); }} >Engelle</Menu.Item>
                 }
             </SubMenu>;
 
@@ -56,45 +60,45 @@ function Users(props: any) {
     });
 
 
-    const [openKeys, setOpenKeys] = React.useState(['sub1']);
+    const [openKeys, setOpenKeys] = React.useState([]);
 
-    const onOpenChange = (keys: any) => {
-        const latestOpenKey = keys.find((key: string) => openKeys.indexOf(key) === -1);
-        if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-            setOpenKeys(keys);
+    const onOpenChange = (items: any) => {
+        const latestOpenKey = items.find((key: string) => openKeys.indexOf(key) === -1);
+
+
+        if (latestOpenKey) {
+            setOpenKeys([latestOpenKey]);
         } else {
-            setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+            setOpenKeys([]);
         }
     };
 
-    return (
+    const handleSearch = () => {
+        const value = $("#searchUser").val() ? $("#searchUser").val().toString() : "";
+        setSearchItem(value);
+    }
 
-        <div className="col-3 chat" style={{ height: "100%", paddingRight: "0px", paddingLeft: "0px" }}>
-            <div className="card mb-sm-3 mb-md-0 contacts_card" style={{ height: "100%" }}>
-                <div style={{
-                    height: "100%",
-                    paddingTop: "54px",
-                    paddingBottom: "45px"
-                }}>
-                    <div className="form-group has-search">
-                        <span className="fa fa-search form-control-feedback"></span>
-                        <input type="text" className="form-control search" placeholder="Search" name=""></input>
-                    </div>
-                    {/* <ul id="contacts" className="contacts">
-                        {getContactItems()}
-                    </ul> */}
-                    <Menu mode="inline"
-                        openKeys={openKeys}
-                        onOpenChange={onOpenChange}
-                        inlineIndent={5}
-                        className={"chat-menu"}
-                    >
-                        {getContactItemsForMenu()}
-                    </Menu>
+    return (
+        <>
+            <div style={{
+                height: "100%",
+            }}>
+                <div className="form-group has-search">
+                    <span className="fa fa-search form-control-feedback"></span>
+                    <input type="text" className="form-control search" placeholder="Search" id="searchUser" onKeyDown={handleSearch}></input>
                 </div>
-                <div className="card-footer"></div>
+                <Menu mode="inline"
+                    openKeys={openKeys}
+                    onOpenChange={onOpenChange}
+                    inlineIndent={24}
+                    className={"chat-menu"}
+                >
+                    {getContactItemsForMenu()}
+                </Menu>
             </div>
-        </div>
+            <div className="card-footer"></div>
+        </>
+
     )
 }
 
