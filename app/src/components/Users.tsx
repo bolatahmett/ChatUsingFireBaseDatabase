@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
-import { showUserOptions } from '../helper/helper';
 import { database } from './firebase';
-import { addChat, addBlockedUser, removeBlockedUser } from '../redux/actions/action';
+import { addChat, removeChat, addBlockedUser, removeBlockedUser } from '../redux/actions/action';
 import { Menu } from 'antd';
-import { MessageOutlined, UserOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
+import { MessageOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 const { SubMenu } = Menu;
-const rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 
 function Users(props: any) {
 
     const [contactItems, setContactItem] = useState([]);
-    const [searchItem, setSearchItem] = useState("")
+    const [searchItem, setSearchItem] = useState("");
+    const [openKeys, setOpenKeys] = React.useState([]);
 
     useEffect(() => {
         userLoad();
@@ -44,7 +43,7 @@ function Users(props: any) {
         if (item.userName.includes(searchItem))
             return item;
     }).map((contactItem: UserModel) => {
-
+        debugger;
         const contentContact = contactItem.userName === props.user.userName
             ? <Menu.Item key={contactItem.userName} style={{ color: contactItem.color }}>{contactItem.userName}</Menu.Item>
             : <SubMenu key={contactItem.userName} title={contactItem.userName} style={{ color: contactItem.color }}>
@@ -59,18 +58,10 @@ function Users(props: any) {
         return contentContact;
     });
 
-
-    const [openKeys, setOpenKeys] = React.useState([]);
-
-    const onOpenChange = (items: any) => {
+    const onOpenChange = (items: string[]) => {
         const latestOpenKey = items.find((key: string) => openKeys.indexOf(key) === -1);
-
-
-        if (latestOpenKey) {
-            setOpenKeys([latestOpenKey]);
-        } else {
-            setOpenKeys([]);
-        }
+        const checkedOpenKey = latestOpenKey ? [latestOpenKey] : [];
+        setOpenKeys(checkedOpenKey);
     };
 
     const handleSearch = () => {
@@ -110,6 +101,7 @@ const mapStateToProps = (state: any) => {
 
 export default connect(mapStateToProps, {
     addChat,
+    removeChat,
     addBlockedUser,
     removeBlockedUser
 })(Users);

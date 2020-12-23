@@ -9,12 +9,10 @@ import UserContext from './UserContext';
 import { Col, Row } from 'antd';
 
 
-// Things to do before unloading/closing the tab
 const doSomethingBeforeUnload = (userName: string) => {
     setOnline(userName, 0);
 }
 
-// Setup the `beforeunload` event listener
 const setupBeforeUnloadListener = (userName: string) => {
     window.addEventListener("beforeunload", (ev) => {
         ev.preventDefault();

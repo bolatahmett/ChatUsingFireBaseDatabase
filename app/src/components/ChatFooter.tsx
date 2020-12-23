@@ -1,11 +1,16 @@
 import React from 'react'
 import { useContext } from 'react';
 import { connect } from 'react-redux';
-import { getUserInfoFromStorage, formatTime } from '../helper/helper'
+import { formatTime } from '../helper/helper'
 import { database } from './firebase';
 import UserContext from './UserContext';
 
-function ChatFooter(props: any) {
+interface ChatFooterProps {
+    startedChatUser: ChatUserModel[];
+}
+
+
+function ChatFooter(props: ChatFooterProps) {
 
     const context = useContext(UserContext)
 
@@ -22,6 +27,11 @@ function ChatFooter(props: any) {
         }
     }
 
+    const getActiveChatUser = () => {
+        const toUser = props.startedChatUser.find((item: ChatUserModel) => { if (item.isActive) return item; });
+        return toUser.key;
+    }
+
     const mesajGonder = () => {
         var mesaj = $("#mesaj").val();
 
@@ -34,7 +44,7 @@ function ChatFooter(props: any) {
                 timeOfMessage: formattedTime,
                 color: context.user.color,
                 sex: context.user.sex,
-                to: props.startedChatUser
+                to: getActiveChatUser()
             });
 
             $("#mesaj").val('');

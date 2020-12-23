@@ -3,8 +3,18 @@ export const loginUser = (user: UserModel) => ({
     user: user
 });
 
-export const addChat = (userName: string) => ({
+export const addChat = (userName: any) => ({
     type: 'ADD_CHAT',
+    userName: userName
+});
+
+export const removeChat = (userName: string) => ({
+    type: 'REMOVE_CHAT',
+    userName: userName
+});
+
+export const activateChat = (userName: string) => ({
+    type: 'ACTIVATE_CHAT',
     userName: userName
 });
 

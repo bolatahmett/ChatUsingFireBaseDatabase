@@ -12,7 +12,7 @@ export const chatMessagesListener = (userName: any, addChatMessage: any) => {
                 timeOfMessage: data.timeOfMessage,
                 to: data.to,
                 from: data.from
-            });
+            } as ChatMessageModel);
         } else {
             var ref = database.ref("users/" + data.from);
             ref.once("value")
@@ -26,7 +26,7 @@ export const chatMessagesListener = (userName: any, addChatMessage: any) => {
                             timeOfMessage: data.timeOfMessage,
                             color: data.color,
                             sex: data.sex
-                        });
+                        } as ChatMessageModel);
                     }
                 });
         }

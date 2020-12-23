@@ -4,7 +4,7 @@ import { database } from './firebase';
 import { connect } from 'react-redux';
 import { loginUser } from '../redux/actions/action';
 import { addChat } from '../redux/actions/action';
-import { Radio, message, Form, Input, Button } from 'antd';
+import { Radio, message, Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 interface UserLoginProps {
@@ -13,12 +13,12 @@ interface UserLoginProps {
 }
 
 const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
+    wrapperCol: { offset: 6, span: 16 },
 };
 
 function UserLogin(props: UserLoginProps) {
 
-    const onFinish = (values: any) => {
+    const onFinish = (values: LoginModel) => {
         login(values.username, values.password, values.sexOption);
     };
 
@@ -33,7 +33,7 @@ function UserLogin(props: UserLoginProps) {
         $("#chatEkrani").show();
     }
 
-    const saveUser = (user: { userName: any; password: any; ip: any; sex: any; color: any; }) => {
+    const saveUser = (user: UserModel) => {
         var userKey = database.ref("users/" + user.userName).push().key; //Rastgele bir userkey gönderir.
         database.ref("users/" + user.userName).set({
             userName: user.userName,
@@ -46,7 +46,7 @@ function UserLogin(props: UserLoginProps) {
         });
     }
 
-    const login = (userName: string, password: string, sex: string) => {
+    const login = (userName: string, password: string, sex: SexOption) => {
         password = password === undefined ? "" : password;
         var ip = getGlobalUserInfo();
         let user: UserModel = {
@@ -54,7 +54,7 @@ function UserLogin(props: UserLoginProps) {
             userName: userName,
             password: "",
             ip: ip,
-            sex: sex,
+            sex: sex.toString(),
             color: ""
         };
 
@@ -93,9 +93,9 @@ function UserLogin(props: UserLoginProps) {
     }
 
     return (
-        <div id="girisEkrani" className="row vertical-center">
-            <div className="col-md-4 offset-md-4">
-                <h3 style={{ fontFamily: "cursive", textAlign: "center" }}>Chat</h3>
+
+        <Row id="girisEkrani" justify="center" className={"vertical-center"}>
+            <Col xs={20} sm={20} md={16} lg={12} xl={6} >
                 <Form
                     name={"LoginForm"}
                     initialValues={{ remember: true }}
@@ -103,11 +103,11 @@ function UserLogin(props: UserLoginProps) {
                     onFinishFailed={onFinishFailed}
                 >
                     <Form.Item name="username"
-                        rules={[{ required: true, message: 'Lütfen kullanıcı adı giriniz!' }]} >
+                        rules={[{ required: true, message: 'Lütfen kullanıcı adı giriniz!' }]}>
                         <Input placeholder={"Kullanıcı Adı"} prefix={<UserOutlined className="site-form-item-icon" />} />
                     </Form.Item>
 
-                    <Form.Item name="password" >
+                    <Form.Item name="password">
                         <Input.Password placeholder={"Şifre"} />
                     </Form.Item>
 
@@ -124,12 +124,12 @@ function UserLogin(props: UserLoginProps) {
                         </Radio.Group>
                     </Form.Item>
 
-                    <Form.Item >
+                    <Form.Item>
                         <Button type="primary" htmlType="submit" block>Giriş</Button>
                     </Form.Item>
                 </Form>
-            </div>
-        </div>
+            </Col>
+        </Row>
     )
 }
 

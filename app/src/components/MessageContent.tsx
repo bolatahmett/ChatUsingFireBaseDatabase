@@ -5,7 +5,7 @@ import UserContext from './UserContext';
 
 interface MessageContentProps {
     blockedUsers?: UserModel[];
-    chatMessages: {};
+    chatMessages: ChatMessageModel;
     chatKey: string;
 }
 
@@ -20,7 +20,7 @@ function MessageContent(props: MessageContentProps) {
     const context = useContext(UserContext);
 
     useEffect(() => {
-        props.chatMessages && handleAddMessage(props.chatMessages)
+        props.chatMessages && handleAddMessage(props.chatMessages);
     }, [props.chatMessages]);
 
     useEffect(() => {
@@ -31,7 +31,7 @@ function MessageContent(props: MessageContentProps) {
         $(".card-body").scrollTop($('.card-body')[0].scrollHeight - $('.card-body')[0].clientHeight);
     });
 
-    const handleAddMessage = (message: any) => {
+    const handleAddMessage = (message: ChatMessageModel) => {
         dispatch({
             type: "add",
             payload: message
@@ -41,7 +41,7 @@ function MessageContent(props: MessageContentProps) {
     return (
         <>
             {
-                messageItems.map((item: any, index: number) => {
+                messageItems.map((item: ChatMessageModel, index: number) => {
                     const uniqueKey = `${item.key}${index}`;
                     const isBlockedUser = props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === item.from);
                     if (((
@@ -83,10 +83,9 @@ function MessageContent(props: MessageContentProps) {
 }
 
 const mapStateToProps = (state: any) => {
-    const startedChatUser = state.startChat;
     const chatMessages = state.chatMessages;
     const blockedUsers = state.blockedUsers;
-    return { startedChatUser, chatMessages, blockedUsers };
+    return { chatMessages, blockedUsers };
 };
 
 export default connect(mapStateToProps, null)(MessageContent);

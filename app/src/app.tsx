@@ -4,6 +4,7 @@ import UserLogin from './components/UserLogin';
 import Chat from './components/chat';
 import { connect } from 'react-redux';
 import UserContext from './components/UserContext';
+import ErrorBoundary from './components/ErrorBoundary';
 
 interface AppProps {
     firebase: any;
@@ -15,14 +16,22 @@ interface AppProps {
 function App(props: AppProps) {
     return (
         <>
-            <div style={{ height: "100%" }}>
+            <ErrorBoundary
+                // @ts-ignore
+                fallbackRender={({ error, resetErrorBoundary, componentStack }) => (
+                    <div>
+                        <h1>An error occurred: {error.message}</h1>
+                        <button onClick={resetErrorBoundary}>Try again</button>
+                    </div>
+                )}
+            >
                 <UserLogin></UserLogin>
                 {props.user &&
                     <UserContext.Provider value={{ user: props.user }}>
                         <Chat />
                     </UserContext.Provider>
                 }
-            </div>
+            </ErrorBoundary>
         </>
     )
 }

@@ -24,6 +24,7 @@
 			font-size: x-small;
 			background-color: ghostwhite;
 			height: "100%";
+			border-radius: 5px;
 		}
 
 		@media (min-width: 992px) { 
@@ -302,6 +303,7 @@ background-size: cover;} */
 .ant-menu {
 	font-size: x-small !important;
 	background-color: lightslategray;
+	border-radius: 5px;
 }
 
 .chat-menu {

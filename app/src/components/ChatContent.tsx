@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react'
 import 'antd/dist/antd.css'
 import { connect } from 'react-redux';
-import { addChat } from '../redux/actions/action';
+import { addChat, removeChat, activateChat } from '../redux/actions/action';
 import { addChatMessages } from '../redux/actions/action';
 import { chatMessagesListener } from '../Listener/listener';
 import { Col, Row, Tabs } from 'antd';
@@ -11,7 +11,17 @@ import UserContext from './UserContext';
 
 const { TabPane } = Tabs;
 
-function ChatContent(props: any) {
+
+interface ChatContentProps {
+    addChatMessages: any;
+    chatMessages: ChatMessageModel;
+    addChat: any;
+    startedChatUser: ChatUserModel[];
+    activateChat: any;
+    removeChat: any;
+}
+
+function ChatContent(props: ChatContentProps) {
     const context = useContext(UserContext);
     const [tabChatContent, setTabChatContent] = useState([]);
     const [activeTabKey, setActiveTabKey] = useState("1");
@@ -21,61 +31,59 @@ function ChatContent(props: any) {
     }, []);
 
     useEffect(() => {
+        addChatFromReceivedMessage();
+        alertUserForReceivedMessage();
+    }, [props.chatMessages]);
 
+    useEffect(() => {
+        setTabChatContent(props.startedChatUser);
+        props.startedChatUser.length > 0 && setActiveTabKey(props.startedChatUser[props.startedChatUser.length - 1].key);
+    }, [props.startedChatUser]);
+
+    const addChatFromReceivedMessage = () => {
         if (props.chatMessages && props.chatMessages.from !== context.user.userName && props.chatMessages.to === context.user.userName) {
-            const checkIfExist = tabChatContent.filter((item) => {
+            const checkIfExist = tabChatContent.find((item) => {
                 if (item.key === props.chatMessages.from) {
                     return item;
                 }
             });
 
-            if (checkIfExist.length === 0) {
-                props.addChat(props.chatMessages.from);
-            }
+            !checkIfExist && props.addChat(props.chatMessages.from);
         }
+    }
 
-    }, [props.chatMessages]);
-
-    useEffect(() => {
-        const checkIfExist = tabChatContent.filter((item) => {
-            if (item.key === props.startedChatUser) {
-                return item;
-            }
-        });
-
-        if (props.startedChatUser && checkIfExist.length === 0) {
-            setTabChatContent(prevChat => ([...prevChat, { key: props.startedChatUser }]));
-            setActiveTabKey(props.startedChatUser);
+    const alertUserForReceivedMessage = () => {
+        if (props.chatMessages.to === context.user.userName && props.chatMessages.from !== activeTabKey) {
+            tabChatContent.forEach((item: ChatUserModel) => {
+                if (item.key === props.chatMessages.from)
+                    item.isMessageReceived = true;
+            });
+            setTabChatContent(tabChatContent);
         }
+    }
 
-    }, [props.startedChatUser]);
-
-    const changeTab = (activeKey: any) => {
-        props.addChat(activeKey);
+    const changeTab = (activeKey: string) => {
+        props.activateChat(activeKey);
         setActiveTabKey(activeKey);
+        tabChatContent.forEach((item: ChatUserModel) => { if (item.key === activeKey) item.isMessageReceived = false; });
+        setTabChatContent(tabChatContent);
     };
 
-    const onEdit = (targetKey: any, action: any) => {
+    const onEdit = (targetKey: string, action: any) => {
         eval(action)(targetKey);
     };
 
-    const remove = (targetKey: any) => {
-        const otherTabChatContent = tabChatContent.filter((item) => {
-            if (item.key !== targetKey) {
-                return item;
-            }
-        });
-        setTabChatContent(otherTabChatContent);
-        otherTabChatContent.length > 0 && setActiveTabKey(otherTabChatContent[otherTabChatContent.length - 1].key);
+    const remove = (targetKey: string) => {
+        props.removeChat(targetKey);
     };
 
     return (
         <>
             <Tabs activeKey={activeTabKey} type="editable-card" size={"small"} hideAdd onChange={changeTab} onEdit={onEdit} >
                 {
-                    tabChatContent.length > 0 && tabChatContent.map((item: any) => {
+                    tabChatContent.length > 0 && tabChatContent.map((item: ChatUserModel) => {
                         return (
-                            <TabPane closable={item.key !== "Genel"} tab={<TabNotification tabTitle={item.key} hasNewMessage={false} />} key={item.key}>
+                            <TabPane key={item.key} closable={item.key !== "Genel"} tab={<TabNotification tabTitle={item.key} hasNewMessage={item.isMessageReceived} />}>
                                 <Row style={{ height: "100%" }}>
                                     <Col span={24} style={{ height: "100%" }}>
                                         <div className="card-body msg_card_body" style={{ height: "100%" }}>
@@ -101,6 +109,8 @@ const mapStateToProps = (state: any) => {
 };
 
 export default connect(mapStateToProps, {
+    activateChat,
+    removeChat,
     addChat,
     addChatMessages
 })(ChatContent);

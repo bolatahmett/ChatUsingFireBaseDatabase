@@ -7,10 +7,15 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import rootReducer from './redux/reducers/index';
 import App from './app';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const store = createStore(rootReducer);
 
-// @ts-ignore
-ReactDOM.render(<FirebaseContext.Provider value={firebase}>
-    <Provider store={store}>  <App firebase={firebase} database={database} /> </Provider>
-</FirebaseContext.Provider>, document.getElementById('app'))
+ReactDOM.render(
+    <FirebaseContext.Provider value={firebase}>
+        <Provider store={store}>
+
+            <App firebase={firebase} database={database} />
+        </Provider>
+    </FirebaseContext.Provider>
+    , document.getElementById('app'))
