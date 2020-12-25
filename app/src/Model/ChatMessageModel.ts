@@ -5,5 +5,5 @@ interface ChatMessageModel {
     message: string;
     timeOfMessage: string;
     color: string;
-    sex: string;
+    gender: GenderOption;
 }

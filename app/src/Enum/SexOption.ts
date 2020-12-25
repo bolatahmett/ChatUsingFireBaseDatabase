@@ -1,4 +1,4 @@
-enum SexOption {
+const enum GenderOption {
     Woman = "Woman",
     Man = "Man"
 }

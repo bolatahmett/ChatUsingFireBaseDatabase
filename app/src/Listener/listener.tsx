@@ -2,9 +2,14 @@ import { database } from "../components/firebase";
 
 export const chatMessagesListener = (userName: any, addChatMessage: any) => {
     const ref = database.ref("chats");
+
+    // ref.orderByChild("timestamp").limitToFirst(2).once('value').then(function (snapshot) {
+    //     snapshot.ref.remove();
+    // });
+
     ref.on('child_added', (snapshot: any) => {
         var data = snapshot.val();
-
+        debugger;
         if (data.from == userName) {
             addChatMessage({
                 key: snapshot.key,
@@ -25,7 +30,7 @@ export const chatMessagesListener = (userName: any, addChatMessage: any) => {
                             message: data.message,
                             timeOfMessage: data.timeOfMessage,
                             color: data.color,
-                            sex: data.sex
+                            gender: data.gender
                         } as ChatMessageModel);
                     }
                 });

@@ -43,7 +43,7 @@ function ChatFooter(props: ChatFooterProps) {
                 from: context.user.userName,
                 timeOfMessage: formattedTime,
                 color: context.user.color,
-                sex: context.user.sex,
+                gender: context.user.gender,
                 to: getActiveChatUser()
             });
 

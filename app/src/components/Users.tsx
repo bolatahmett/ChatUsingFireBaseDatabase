@@ -26,7 +26,7 @@ function Users(props: any) {
                     userName: data.userName,
                     password: "",
                     ip: data.ip,
-                    sex: data.sex,
+                    gender: data.gender,
                     color: data.color
                 } as UserModel);
 

@@ -1,6 +1,9 @@
 
 interface LoginModel {
     password: string;
-    sexOption: SexOption;
-    username: string;
+    gender: GenderOption;
+    userName: string;
+    heigth: string;
+    weight: string;
+    fleshColored: string;
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import 'antd/dist/antd.css'
 import { connect } from 'react-redux';
 import { addChat, removeChat, activateChat } from '../redux/actions/action';
@@ -10,7 +10,6 @@ import TabNotification from './TabNotification';
 import UserContext from './UserContext';
 
 const { TabPane } = Tabs;
-
 
 interface ChatContentProps {
     addChatMessages: any;
@@ -79,15 +78,16 @@ function ChatContent(props: ChatContentProps) {
 
     return (
         <>
-            <Tabs activeKey={activeTabKey} type="editable-card" size={"small"} hideAdd onChange={changeTab} onEdit={onEdit} >
+            <Tabs activeKey={activeTabKey} type="editable-card" size={"small"} hideAdd onChange={changeTab} onEdit={onEdit} style={{ borderRadius: "20px" }} >
                 {
                     tabChatContent.length > 0 && tabChatContent.map((item: ChatUserModel) => {
                         return (
-                            <TabPane key={item.key} closable={item.key !== "Genel"} tab={<TabNotification tabTitle={item.key} hasNewMessage={item.isMessageReceived} />}>
+                            <TabPane key={item.key} closable={item.key !== "Genel"}
+                                tab={<TabNotification tabTitle={item.key} hasNewMessage={item.isMessageReceived} />}>
                                 <Row style={{ height: "100%" }}>
                                     <Col span={24} style={{ height: "100%" }}>
                                         <div className="card-body msg_card_body" style={{ height: "100%" }}>
-                                            <div id={item.key} className="col-md-24" style={{ height: "100%" }}>
+                                            <div className="col-md-24" style={{ height: "100%" }}>
                                                 <MessageContent chatKey={item.key}></MessageContent>
                                             </div>
                                         </div>

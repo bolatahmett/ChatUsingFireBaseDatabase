@@ -4,8 +4,10 @@ import { database } from './firebase';
 import { connect } from 'react-redux';
 import { loginUser } from '../redux/actions/action';
 import { addChat } from '../redux/actions/action';
-import { Radio, message, Form, Input, Button, Row, Col } from 'antd';
+import { Radio, message, Form, Input, Button, Row, Col, Select, Divider } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+
+const { Option } = Select;
 
 interface UserLoginProps {
     loginUser: any;
@@ -19,7 +21,7 @@ const tailLayout = {
 function UserLogin(props: UserLoginProps) {
 
     const onFinish = (values: LoginModel) => {
-        login(values.username, values.password, values.sexOption);
+        login(values);
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -39,23 +41,29 @@ function UserLogin(props: UserLoginProps) {
             userName: user.userName,
             password: user.password,
             key: userKey,
-            sex: user.sex,
+            gender: user.gender,
             online: 1,
             color: user.color,
-            ip: user.ip
+            ip: user.ip,
+            heigth: user.heigth,
+            weight: user.weight,
+            fleshColored: user.fleshColored
         });
     }
 
-    const login = (userName: string, password: string, sex: SexOption) => {
-        password = password === undefined ? "" : password;
+    const login = (loginInfo: LoginModel) => {
+        const password = loginInfo.password ?? "";
         var ip = getGlobalUserInfo();
         let user: UserModel = {
             key: "",
-            userName: userName,
+            userName: loginInfo.userName,
             password: "",
             ip: ip,
-            sex: sex.toString(),
-            color: ""
+            gender: loginInfo.gender,
+            color: "",
+            heigth: loginInfo.heigth ?? "",
+            weight: loginInfo.weight ?? "",
+            fleshColored: loginInfo.fleshColored ?? ""
         };
 
         var ref = database.ref("blockedusers/" + ip);
@@ -64,7 +72,7 @@ function UserLogin(props: UserLoginProps) {
                 message.warning("Kullanıcı girişi yasaklandı!!!");
             } else {
 
-                let ref = database.ref("users/" + userName);
+                let ref = database.ref("users/" + user.userName);
                 ref.once("value")
                     .then((snapshot: any) => {
                         let name = snapshot.child("username").val() as unknown as string;
@@ -79,7 +87,7 @@ function UserLogin(props: UserLoginProps) {
                         } else {
                             var passwordFromDb = snapshot.child("password").val();
                             if (passwordFromDb === 0 || (passwordFromDb === password)) {
-                                setOnline(userName, 1);
+                                setOnline(user.userName, 1);
                             } else {
                                 message.warning("Hatalı şifre!");
                                 return;
@@ -87,49 +95,87 @@ function UserLogin(props: UserLoginProps) {
                         }
 
                         loadChat(user);
+
                     });
             }
         });
     }
 
     return (
-
-        <Row id="girisEkrani" justify="center" className={"vertical-center"}>
-            <Col xs={20} sm={20} md={16} lg={12} xl={6} >
-                <Form
-                    name={"LoginForm"}
-                    initialValues={{ remember: true }}
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                >
-                    <Form.Item name="username"
-                        rules={[{ required: true, message: 'Lütfen kullanıcı adı giriniz!' }]}>
-                        <Input placeholder={"Kullanıcı Adı"} prefix={<UserOutlined className="site-form-item-icon" />} />
-                    </Form.Item>
-
-                    <Form.Item name="password">
-                        <Input.Password placeholder={"Şifre"} />
-                    </Form.Item>
-
-                    <Form.Item
-                        {...tailLayout}
-                        name="sexOption"
-                        rules={[{
-                            required: true, message: 'Lütfen bir öğe seçin!'
-                        }]}
+        <>
+            <Row id="girisEkrani" justify="center" className={"vertical-center"}>
+                <Col xs={20} sm={20} md={16} lg={12} xl={6} >
+                    <div className="d-flex bd-highlight">
+                        <div className="user_info">
+                            <span style={{ fontFamily: "cursive" }}>Keyfili Sohbetler</span>
+                        </div>
+                    </div>
+                    <Divider></Divider>
+                    <Form
+                        name={"LoginForm"}
+                        initialValues={{ remember: true }}
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
                     >
-                        <Radio.Group>
-                            <Radio value={"woman"}> <img style={{ height: "32px" }} src={"../images/woman.png"}></img></Radio>
-                            <Radio value={"man"}><img style={{ height: "32px" }} src="../images/man.png"></img></Radio>
-                        </Radio.Group>
-                    </Form.Item>
+                        <Form.Item name="userName"
+                            rules={[{ required: true, message: 'Lütfen kullanıcı adı giriniz!' }]}>
+                            <Input placeholder={"Kullanıcı Adı"} prefix={<UserOutlined className="site-form-item-icon" />} />
+                        </Form.Item>
 
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" block>Giriş</Button>
-                    </Form.Item>
-                </Form>
-            </Col>
-        </Row>
+                        <Form.Item name="password">
+                            <Input.Password placeholder={"Şifre (Opsiyonel)"} />
+                        </Form.Item>
+                        <Row justify={"center"} gutter={[4, 4]}>
+                            <Col span={12}>
+                                <Form.Item name="gender" rules={[{ required: true, message: 'Cinsiyet seciniz!' }]}>
+                                    <Select
+                                        placeholder="Cinsiyet"
+                                        allowClear
+                                        style={{ textAlign: "center" }}
+                                    >
+                                        <Option value="woman"><img style={{ height: "32px" }} src={"../images/woman.png"}></img></Option>
+                                        <Option value="man"><img style={{ height: "32px" }} src="../images/man.png"></img></Option>
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item name="fleshColored">
+                                    <Select
+                                        placeholder="Ten rengi"
+                                        allowClear
+                                        style={{ textAlign: "center" }}
+                                    >
+                                        <Option value="Beyaz">Beyaz</Option>
+                                        <Option value="Kumral">Kumral</Option>
+                                        <Option value="Esmer">Esmer</Option>
+                                        <Option value="Buğday">Buğday</Option>
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Row justify={"center"} gutter={[4, 4]}>
+                            <Col span={12}>
+                                <Form.Item name="heigth" >
+                                    <Input placeholder={"Boy (cm)"} style={{ textAlign: "center" }} />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item name="weight" >
+                                    <Input placeholder={"Kilo (cm)"} style={{ textAlign: "center" }} />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Divider></Divider>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" block>Giriş</Button>
+                        </Form.Item>
+                    </Form>
+                    <Divider></Divider>
+                </Col>
+            </Row>
+        </>
+
     )
 }
 

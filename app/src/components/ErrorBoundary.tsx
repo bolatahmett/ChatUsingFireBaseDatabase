@@ -15,13 +15,11 @@ export default class ErrorBoundary extends React.Component<any, ErrorBoundarySta
     }
 
     static getDerivedStateFromError(error: any) {
-        debugger;
         // Update state so the next render will show the fallback UI.
         return { hasError: true };
     }
 
     componentDidCatch(error: any, errorInfo: any) {
-        debugger;
         // You can also log the error to an error reporting service
         // logErrorToMyService(error, errorInfo);
     }

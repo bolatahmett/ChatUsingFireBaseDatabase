@@ -1,7 +1,7 @@
 import { database } from "../components/firebase";
 
-export const setUserInfoSessionStorage = (user: { userName: any; password?: any; ip?: string; sex: any; color: any; }) => {
-    sessionStorage.setItem("userInfo", JSON.stringify({ userName: user.userName, color: user.color, sex: user.sex }));
+export const setUserInfoSessionStorage = (user: { userName: any; password?: any; ip?: string; gender: any; color: any; }) => {
+    sessionStorage.setItem("userInfo", JSON.stringify({ userName: user.userName, color: user.color, gender: user.gender }));
 }
 
 export const getUserInfoFromStorage = () => {
