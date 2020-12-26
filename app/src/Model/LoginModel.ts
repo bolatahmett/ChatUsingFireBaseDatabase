@@ -6,4 +6,6 @@ interface LoginModel {
     heigth: string;
     weight: string;
     fleshColored: string;
+    expectations: string;
+    online: number;
 }

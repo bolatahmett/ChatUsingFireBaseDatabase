@@ -78,7 +78,13 @@ function ChatContent(props: ChatContentProps) {
 
     return (
         <>
-            <Tabs activeKey={activeTabKey} type="editable-card" size={"small"} hideAdd onChange={changeTab} onEdit={onEdit} style={{ borderRadius: "20px" }} >
+            <Tabs activeKey={activeTabKey}
+                type="editable-card"
+                size={"small"}
+                hideAdd
+                onChange={changeTab}
+                onEdit={onEdit}
+                style={{ borderRadius: "20px 0px 0px 0px" }} >
                 {
                     tabChatContent.length > 0 && tabChatContent.map((item: ChatUserModel) => {
                         return (

@@ -1,10 +1,10 @@
 import React from 'react'
-import { getColor, getGlobalUserInfo, setOnline, setUserInfoSessionStorage } from "../helper/helper";
+import { getColor, getGlobalUserInfo, setOnline } from "../helper/helper";
 import { database } from './firebase';
 import { connect } from 'react-redux';
 import { loginUser } from '../redux/actions/action';
 import { addChat } from '../redux/actions/action';
-import { Radio, message, Form, Input, Button, Row, Col, Select, Divider } from 'antd';
+import { message, Form, Input, Button, Row, Col, Select, Divider } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
@@ -47,7 +47,8 @@ function UserLogin(props: UserLoginProps) {
             ip: user.ip,
             heigth: user.heigth,
             weight: user.weight,
-            fleshColored: user.fleshColored
+            fleshColored: user.fleshColored,
+            expectations: user.expectations
         });
     }
 
@@ -63,7 +64,9 @@ function UserLogin(props: UserLoginProps) {
             color: "",
             heigth: loginInfo.heigth ?? "",
             weight: loginInfo.weight ?? "",
-            fleshColored: loginInfo.fleshColored ?? ""
+            fleshColored: loginInfo.fleshColored ?? "",
+            expectations: loginInfo.expectations ?? "",
+            online: loginInfo.online
         };
 
         var ref = database.ref("blockedusers/" + ip);
@@ -163,6 +166,13 @@ function UserLogin(props: UserLoginProps) {
                             <Col span={12}>
                                 <Form.Item name="weight" >
                                     <Input placeholder={"Kilo (cm)"} style={{ textAlign: "center" }} />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row justify={"center"}>
+                            <Col span={24}>
+                                <Form.Item name={'expectations'} label="Beklentiler">
+                                    <Input.TextArea rows={4} />
                                 </Form.Item>
                             </Col>
                         </Row>
