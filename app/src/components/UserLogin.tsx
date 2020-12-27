@@ -62,10 +62,10 @@ function UserLogin(props: UserLoginProps) {
             ip: ip,
             gender: loginInfo.gender,
             color: "",
-            heigth: loginInfo.heigth ?? "",
-            weight: loginInfo.weight ?? "",
-            fleshColored: loginInfo.fleshColored ?? "",
-            expectations: loginInfo.expectations ?? "",
+            heigth: loginInfo.heigth ?? "-",
+            weight: loginInfo.weight ?? "-",
+            fleshColored: loginInfo.fleshColored ?? "-",
+            expectations: loginInfo.expectations ?? "-",
             online: loginInfo.online
         };
 

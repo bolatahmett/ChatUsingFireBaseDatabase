@@ -1,5 +1,4 @@
 const startChat = (state: ChatUserModel[] = [], action: { type: any; userName: string }) => {
-    debugger;
     switch (action.type) {
         case 'ADD_CHAT':
             const isExist = state.some((item: ChatUserModel) => item.key === action.userName);

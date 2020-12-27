@@ -18,7 +18,7 @@ export const activateChat = (userName: string) => ({
     userName: userName
 });
 
-export const addChatMessages = (messageContent: any) => ({
+export const addChatMessages = (messageContent: ChatMessageModel) => ({
     type: 'ADD_CHAT_MESSAGES',
     messageContent: messageContent
 });

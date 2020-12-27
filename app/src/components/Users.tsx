@@ -17,7 +17,7 @@ function Users(props: any) {
     }, []);
 
     const userLoad = () => {
-        database.ref("users").on('value', (snapshot: any) => {
+        database.ref("users").orderByChild("userName").on('value', (snapshot: any) => {
             let changedContextItems: UserModel[] = [];
             snapshot.forEach((childSnapshot: any) => {
                 const data = childSnapshot.val() as UserModel;
@@ -35,7 +35,8 @@ function Users(props: any) {
                 } as UserModel);
 
             });
-            setContactItem(changedContextItems);
+
+            setContactItem(changedContextItems.sort((a, b) => (a.userName.toUpperCase() > b.userName.toUpperCase()) ? 1 : -1));
         });
     }
 
@@ -46,70 +47,73 @@ function Users(props: any) {
     const getUserInfo = (user: UserModel) => {
         const isBlockedUser = props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === user.userName)
         return <>
-            <Divider></Divider>
-            <Row>
-                <Col span={24}>
-                    <Row>
-                        <Col span={12}>
-                            <span>{`Cinsiyet`}</span>
-                        </Col>
-                        <Col span={12}>
-                            <span>{`${user.gender}`}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <span>{`Boy:`}</span>
-                        </Col>
-                        <Col span={12}>
-                            <span>{`${user.heigth}`}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <span>{`Kilo:`}</span>
-                        </Col>
-                        <Col>
-                            <span>{`${user.weight}`}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <span>{`Ten:`}</span>
-                        </Col>
-                        <Col span={12}>
-                            <span>{`${user.fleshColored}`}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <span>{`Beklentiler:`}</span>
-                        </Col>
-                        <Col span={12}>
-                            <span>{`${user.expectations}`}</span>
-                        </Col>
-                    </Row>
-                    <Divider></Divider>
-                    <Row justify={"center"} gutter={16}>
-                        <Col className="gutter-row" span={12}>
-                            <Button onClick={() => {
-                                startChat(user.userName);
-                                notification.close(user.userName);
-                            }}><MessageOutlined />Mesaj Gönder</Button>
-                        </Col>
-                        <Col className="gutter-row" span={12}>
-                            {isBlockedUser ? <Button onClick={() => {
-                                props.removeBlockedUser(user);
-                                notification.close(user.userName);
-                            }}><EyeOutlined />İzin ver</Button>
-                                : <Button onClick={() => {
-                                    props.addBlockedUser(user);
+            <div style={{ fontFamily: "cursive", fontSize: "x-small" }}>
+
+                <Divider></Divider>
+                <Row >
+                    <Col span={24}>
+                        <Row>
+                            <Col span={12}>
+                                <span>{`Cinsiyet`}</span>
+                            </Col>
+                            <Col span={12}>
+                                <span>{`${user.gender}`}</span>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={12}>
+                                <span>{`Boy:`}</span>
+                            </Col>
+                            <Col span={12}>
+                                <span>{`${user.heigth}`}</span>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={12}>
+                                <span>{`Kilo:`}</span>
+                            </Col>
+                            <Col>
+                                <span>{`${user.weight}`}</span>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={12}>
+                                <span>{`Ten:`}</span>
+                            </Col>
+                            <Col span={12}>
+                                <span>{`${user.fleshColored}`}</span>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={12}>
+                                <span>{`Beklentiler:`}</span>
+                            </Col>
+                            <Col span={12}>
+                                <span>{`${user.expectations}`}</span>
+                            </Col>
+                        </Row>
+                        <Divider></Divider>
+                        {user.userName !== props.user.userName && <Row justify={"center"}>
+                            <Col className="gutter-row" span={12}>
+                                <Button size={"small"} onClick={() => {
+                                    startChat(user.userName);
                                     notification.close(user.userName);
-                                }}><EyeInvisibleOutlined />Engelle</Button>}
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
+                                }}><MessageOutlined /><span style={{ fontFamily: "cursive", fontSize: "x-small" }}>Mesaj Gönder</span></Button>
+                            </Col>
+                            <Col className="gutter-row" span={12}>
+                                {isBlockedUser ? <Button size={"small"} onClick={() => {
+                                    props.removeBlockedUser(user);
+                                    notification.close(user.userName);
+                                }}><EyeOutlined /> <span style={{ fontFamily: "cursive", fontSize: "x-small" }}> Izin ver</span> </Button>
+                                    : <Button size={"small"} onClick={() => {
+                                        props.addBlockedUser(user);
+                                        notification.close(user.userName);
+                                    }}><EyeInvisibleOutlined /><span style={{ fontFamily: "cursive", fontSize: "x-small" }}>Engelle</span></Button>}
+                            </Col>
+                        </Row>}
+                    </Col>
+                </Row>
+            </div>
         </>
     }
 
@@ -126,7 +130,7 @@ function Users(props: any) {
             key: contactItem.userName,
             message: <span style={{ fontFamily: "cursive" }}> {contactItem.userName}</span>,
             description: contentDetail,
-            duration: 10,
+            duration: 0,
             icon: <img style={{ height: "16px" }} src={imgurl}></img>,
             placement: "topLeft"
         };

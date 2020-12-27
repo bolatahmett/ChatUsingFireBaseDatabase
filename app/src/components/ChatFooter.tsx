@@ -48,6 +48,7 @@ function ChatFooter(props: ChatFooterProps) {
             });
 
             $("#mesaj").val('');
+            $("#mesaj").trigger("focus");
 
         } else {
             alert("Lütfen boş alan bırakmayınız!");
