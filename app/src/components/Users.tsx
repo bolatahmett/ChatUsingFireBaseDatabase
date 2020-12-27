@@ -130,9 +130,9 @@ function Users(props: any) {
             key: contactItem.userName,
             message: <span style={{ fontFamily: "cursive" }}> {contactItem.userName}</span>,
             description: contentDetail,
-            duration: 0,
+            duration: 10,
             icon: <img style={{ height: "16px" }} src={imgurl}></img>,
-            placement: "topLeft"
+            placement: "topRight"
         };
         notification.open(args);
     }

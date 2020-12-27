@@ -47,7 +47,7 @@
      padding-bottom: 0 !important;
 }
  .card-footer{
-     border-radius: 0 0 15px 15px !important;
+     border-radius: 15px !important;
      border-top: 0 !important;
      padding: .75rem .5rem !important;
 }
@@ -84,7 +84,7 @@
      cursor: pointer;
 }
  .send_btn{
-     border-radius: 0 15px 15px 0 !important;
+     border-radius: 5px !important;
      background-color: rgba(0,0,0,0.3) !important;
      border:0 !important;
      color: white !important;
@@ -296,7 +296,7 @@
      font-size: x-small !important;
      background-color: lightslategray;
      border-radius: 5px;
-     height: calc(100% - 124px);
+     height: calc(100% - 52px);
 }
  .chat-menu {
      background-color: ghostwhite !important;

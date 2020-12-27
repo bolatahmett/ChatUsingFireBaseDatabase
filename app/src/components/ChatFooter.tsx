@@ -1,3 +1,4 @@
+import { Button, Col, Row } from 'antd';
 import React from 'react'
 import { useContext } from 'react';
 import { connect } from 'react-redux';
@@ -57,18 +58,27 @@ function ChatFooter(props: ChatFooterProps) {
     }
 
     return (
-        <div className="card-footer" id="card-footer">
-            <div className="input-group">
-                <div className="input-group-append">
-                    <span className="input-group-text attach_btn"><i className="fas fa-paperclip"></i></span>
-                </div>
-                <textarea id="mesaj" name="mesaj" className="form-control type_msg"
-                    placeholder="Mesajınızı yazın..." onKeyPress={onKeyPressMessage}></textarea>
-                <div className="input-group-append">
-                    <span className="input-group-text send_btn" onClick={mesajGonder}>Gönder</span>
-                </div>
-            </div>
-        </div>
+        <>
+            <Row justify="space-around" align="middle" style={{ height: "50px" }}>
+                <Col xs={18} sm={18} md={21} lg={21} xl={21}>
+                    <div className="card-footer" id="card-footer">
+                        <div className="input-group">
+                            <textarea id="mesaj" name="mesaj" className="form-control type_msg"
+                                placeholder="Mesajınızı yazın..." onKeyPress={onKeyPressMessage}></textarea>
+                        </div>
+                    </div>
+                </Col>
+                <Col xs={6} sm={6} md={3} lg={3} xl={3}>
+                    <div className="card-footer" id="card-footer">
+                        <div className="input-group" style={{ justifyContent: "center" }}>
+                            <div className="input-group-append">
+                                <Button className="input-group-text send_btn" onClick={mesajGonder}>Gönder</Button>
+                            </div>
+                        </div>
+                    </div>
+                </Col>
+            </Row>
+        </>
     )
 }
 

@@ -40,19 +40,20 @@ export default function Chat() {
                 </Col>
             </Row>
 
-            <Row id="chatEkrani" justify="center" style={{ height: "calc(100% - 50px)", display: "none" }}>
+            <Row id="chatEkrani" justify="center" style={{ height: "calc(100% - 130px)", display: "none" }}>
+                <Col xs={18} sm={18} md={21} lg={21} xl={21} className="chat" style={{ height: "100%" }}>
+                    <div className="card" style={{ height: "100%" }}>
+                        <ChatContent></ChatContent>
+                    </div>
+                </Col>
                 <Col xs={6} sm={6} md={3} lg={3} xl={3} className="chat" style={{ height: "100%" }}>
                     <div className="card mb-sm-3 mb-md-0 contacts_card" style={{ height: "100%" }}>
                         <Users></Users>
                     </div>
                 </Col>
-                <Col xs={18} sm={18} md={21} lg={21} xl={21} className="chat" style={{ height: "100%" }}>
-                    <div className="card" style={{ height: "100%" }}>
-                        <ChatContent></ChatContent>
-                        <ChatFooter></ChatFooter>
-                    </div>
-                </Col>
             </Row>
+            <ChatFooter></ChatFooter>
+
         </>
     )
 }
