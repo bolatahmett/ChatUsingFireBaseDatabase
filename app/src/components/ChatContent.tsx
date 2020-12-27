@@ -13,7 +13,7 @@ const { TabPane } = Tabs;
 
 interface ChatContentProps {
     addChatMessages: any;
-    chatMessages: ChatMessageModel;
+    chatMessages: ChatMessageModel[];
     addChat: any;
     startedChatUser: ChatUserModel[];
     activateChat: any;
@@ -30,8 +30,11 @@ function ChatContent(props: ChatContentProps) {
     }, []);
 
     useEffect(() => {
-        addChatFromReceivedMessage();
-        alertUserForReceivedMessage();
+        if (props.chatMessages && props.chatMessages.length > 0) {
+            const messageContent = props.chatMessages[props.chatMessages.length - 1];
+            addChatFromReceivedMessage(messageContent);
+            alertUserForReceivedMessage(messageContent);
+        }
     }, [props.chatMessages]);
 
     useEffect(() => {
@@ -39,22 +42,22 @@ function ChatContent(props: ChatContentProps) {
         props.startedChatUser.length > 0 && setActiveTabKey(props.startedChatUser[props.startedChatUser.length - 1].key);
     }, [props.startedChatUser]);
 
-    const addChatFromReceivedMessage = () => {
-        if (props.chatMessages && props.chatMessages.from !== context.user.userName && props.chatMessages.to === context.user.userName) {
+    const addChatFromReceivedMessage = (messageContent: ChatMessageModel) => {
+        if (messageContent && messageContent.from !== context.user.userName && messageContent.to === context.user.userName) {
             const checkIfExist = tabChatContent.find((item) => {
-                if (item.key === props.chatMessages.from) {
+                if (item.key === messageContent.from) {
                     return item;
                 }
             });
 
-            !checkIfExist && props.addChat(props.chatMessages.from);
+            !checkIfExist && props.addChat(messageContent.from);
         }
     }
 
-    const alertUserForReceivedMessage = () => {
-        if (props.chatMessages.to === context.user.userName && props.chatMessages.from !== activeTabKey) {
+    const alertUserForReceivedMessage = (messageContent: ChatMessageModel) => {
+        if (messageContent.to === context.user.userName && messageContent.from !== activeTabKey) {
             tabChatContent.forEach((item: ChatUserModel) => {
-                if (item.key === props.chatMessages.from)
+                if (item.key === messageContent.from)
                     item.isMessageReceived = true;
             });
             setTabChatContent(tabChatContent);

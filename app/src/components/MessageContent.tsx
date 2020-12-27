@@ -5,22 +5,16 @@ import UserContext from './UserContext';
 
 interface MessageContentProps {
     blockedUsers?: UserModel[];
-    chatMessages: ChatMessageModel;
+    chatMessages: ChatMessageModel[];
     chatKey: string;
 }
 
-const reducer = (currentState: any, action: any) => {
-    if (action.type === "add") {
-        return [...currentState, action.payload];
-    }
-}
-
 function MessageContent(props: MessageContentProps) {
-    const [messageItems, dispatch] = useReducer(reducer, []);
+    const [messageItems, setMessageItems] = useState([])
     const context = useContext(UserContext);
 
     useEffect(() => {
-        props.chatMessages && handleAddMessage(props.chatMessages);
+        props.chatMessages && setMessageItems(props.chatMessages);
     }, [props.chatMessages]);
 
     useEffect(() => {
@@ -31,12 +25,6 @@ function MessageContent(props: MessageContentProps) {
         $(".card-body").scrollTop($('.card-body')[0].scrollHeight - $('.card-body')[0].clientHeight);
     });
 
-    const handleAddMessage = (message: ChatMessageModel) => {
-        dispatch({
-            type: "add",
-            payload: message
-        });
-    }
 
     const canMessageShow = (item: ChatMessageModel, isBlockedUser: boolean) => {
         return ((
