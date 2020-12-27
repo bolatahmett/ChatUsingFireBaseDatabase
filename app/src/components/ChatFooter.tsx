@@ -1,4 +1,4 @@
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Input, Row } from 'antd';
 import React from 'react'
 import { useContext } from 'react';
 import { connect } from 'react-redux';
@@ -60,20 +60,16 @@ function ChatFooter(props: ChatFooterProps) {
     return (
         <>
             <Row justify="space-around" align="middle" style={{ height: "50px" }}>
-                <Col xs={18} sm={18} md={21} lg={21} xl={21}>
+                <Col span={24}>
                     <div className="card-footer" id="card-footer">
                         <div className="input-group">
-                            <textarea id="mesaj" name="mesaj" className="form-control type_msg"
-                                placeholder="Mesajınızı yazın..." onKeyPress={onKeyPressMessage}></textarea>
-                        </div>
-                    </div>
-                </Col>
-                <Col xs={6} sm={6} md={3} lg={3} xl={3}>
-                    <div className="card-footer" id="card-footer">
-                        <div className="input-group" style={{ justifyContent: "center" }}>
-                            <div className="input-group-append">
-                                <Button className="input-group-text send_btn" onClick={mesajGonder}>Gönder</Button>
-                            </div>
+                            <Input id={"mesaj"} onKeyPress={onKeyPressMessage}
+                                placeholder="Mesajınızı yazın..."
+                                style={{ fontSize: "small", borderRadius: "20px" }}
+                                suffix={
+                                    <Button className="input-group-text send_btn" onClick={mesajGonder}>Gönder</Button>
+                                }
+                            />
                         </div>
                     </div>
                 </Col>
