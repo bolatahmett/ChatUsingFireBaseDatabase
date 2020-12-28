@@ -6,6 +6,7 @@ import { loginUser } from '../redux/actions/action';
 import { addChat } from '../redux/actions/action';
 import { message, Form, Input, Button, Row, Col, Select, Divider } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import FireWorksCanvas from '../anime/fireWorksCanvas';
 
 const { Option } = Select;
 
@@ -99,13 +100,18 @@ function UserLogin(props: UserLoginProps) {
 
                         loadChat(user);
 
+                    }).catch((error: any) => {
+                        message.error(error);
                     });
             }
+        }).catch((error: any) => {
+            message.error(error);
         });
     }
 
     return (
         <>
+            <FireWorksCanvas />
             <Row id="girisEkrani" justify="center" className={"vertical-center"}>
                 <Col xs={20} sm={20} md={16} lg={12} xl={6} >
                     <div className="d-flex bd-highlight">
@@ -171,8 +177,8 @@ function UserLogin(props: UserLoginProps) {
                         </Row>
                         <Row justify={"center"}>
                             <Col span={24}>
-                                <Form.Item name={'expectations'} label="Beklentiler">
-                                    <Input.TextArea rows={4} />
+                                <Form.Item name={'expectations'}>
+                                    <Input.TextArea rows={2} placeholder={"Beklentiler"} />
                                 </Form.Item>
                             </Col>
                         </Row>

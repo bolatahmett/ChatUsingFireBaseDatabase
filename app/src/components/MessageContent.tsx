@@ -2,19 +2,33 @@ import React, { useContext, useEffect, useReducer, useState } from 'react'
 import { connect } from 'react-redux';
 import { showTimeOfMessage } from '../helper/helper';
 import UserContext from './UserContext';
+import useSound from 'use-sound';
+// @ts-ignore
+import * as alarm from "../sounds/rising-pops.mp3";
 
 interface MessageContentProps {
     blockedUsers?: UserModel[];
     chatMessages: ChatMessageModel[];
     chatKey: string;
+    notification: string[];
 }
 
 function MessageContent(props: MessageContentProps) {
     const [messageItems, setMessageItems] = useState([])
     const context = useContext(UserContext);
+    const [play] = useSound(alarm.default);
+
 
     useEffect(() => {
-        props.chatMessages && setMessageItems(props.chatMessages);
+        debugger;
+        if (props.chatMessages && props.chatMessages.length > 0) {
+            props.chatMessages && setMessageItems(props.chatMessages);
+            const lastMessage = props.chatMessages[props.chatMessages.length - 1];
+            if (lastMessage.from !== context.user.userName && props.notification.some((item: string) => { return item === lastMessage.from })) {
+                play();
+            }
+        }
+
     }, [props.chatMessages]);
 
     useEffect(() => {
@@ -36,7 +50,7 @@ function MessageContent(props: MessageContentProps) {
     const getMessageContentForFromMe = (uniqueKey: string, item: ChatMessageModel) => {
         return (
             <div id={item.key} className="d-flex justify-content-end">
-                <div className="message-me" role="alert" onClick={() => showTimeOfMessage(uniqueKey)}>{item.message}
+                <div className="message-me" role="alert" onClick={() => { showTimeOfMessage(uniqueKey); }}>{item.message}
                     <div id={"timeOfMessage" + uniqueKey} style={{ display: "none" }}>
                         {item.timeOfMessage}
                     </div>
@@ -81,9 +95,11 @@ function MessageContent(props: MessageContentProps) {
 }
 
 const mapStateToProps = (state: any) => {
+    debugger;
     const chatMessages = state.chatMessages;
     const blockedUsers = state.blockedUsers;
-    return { chatMessages, blockedUsers };
+    const notification = state.notification;
+    return { chatMessages, blockedUsers, notification };
 };
 
 export default connect(mapStateToProps, null)(MessageContent);

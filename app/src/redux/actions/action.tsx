@@ -32,3 +32,14 @@ export const removeBlockedUser = (user: UserModel) => ({
     type: 'REMOVE_BLOCKED_USER',
     user: user
 });
+
+
+export const addNotification = (userName: string) => ({
+    type: 'ADD_NOTIFACATION',
+    userName: userName
+});
+
+export const removeNotification = (userName: string) => ({
+    type: 'REMOVE_NOTIFACATION',
+    userName: userName
+});

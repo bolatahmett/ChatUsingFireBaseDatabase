@@ -1,5 +1,5 @@
 import { Button, Col, Input, Row } from 'antd';
-import React from 'react'
+import React, { useState } from 'react'
 import { useContext } from 'react';
 import { connect } from 'react-redux';
 import { formatTime } from '../helper/helper'
@@ -14,19 +14,7 @@ interface ChatFooterProps {
 function ChatFooter(props: ChatFooterProps) {
 
     const context = useContext(UserContext)
-
-    const onKeyPressMessage = () => {
-        var event = window.event;
-        // @ts-ignore
-        var key = event.keyCode;
-        if (key === 13) {
-            event!.preventDefault();
-            mesajGonder();
-            return false;
-        } else {
-            return true;
-        }
-    }
+    const [messageInput, setMessageInput] = useState("")
 
     const getActiveChatUser = () => {
         const toUser = props.startedChatUser.find((item: ChatUserModel) => { if (item.isActive) return item; });
@@ -34,13 +22,14 @@ function ChatFooter(props: ChatFooterProps) {
     }
 
     const mesajGonder = () => {
-        var mesaj = $("#mesaj").val();
 
-        if (context.user.userName != "" && mesaj != "") {
+
+
+        if (context.user.userName != "" && messageInput != "") {
             var formattedTime = formatTime(new Date());
             var messageKey = database.ref("chats/").push().key;
             database.ref("chats/" + messageKey).set({
-                message: mesaj,
+                message: messageInput,
                 from: context.user.userName,
                 timeOfMessage: formattedTime,
                 color: context.user.color,
@@ -48,7 +37,7 @@ function ChatFooter(props: ChatFooterProps) {
                 to: getActiveChatUser()
             });
 
-            $("#mesaj").val('');
+            setMessageInput("");
             $("#mesaj").trigger("focus");
 
         } else {
@@ -57,15 +46,23 @@ function ChatFooter(props: ChatFooterProps) {
         return false;
     }
 
+    const handleOnChange = (e: any) => {
+        setMessageInput(e.target.value);
+    }
+
     return (
         <>
             <Row justify="space-around" align="middle" style={{ height: "50px" }}>
                 <Col span={24}>
                     <div className="card-footer" id="card-footer">
                         <div className="input-group">
-                            <Input id={"mesaj"} onKeyPress={onKeyPressMessage}
+                            <Input id={"mesaj"}
+                                value={messageInput}
+                                onChange={handleOnChange}
+                                allowClear={true}
                                 placeholder="Mesajınızı yazın..."
                                 style={{ fontSize: "small", borderRadius: "20px" }}
+                                onPressEnter={mesajGonder}
                                 suffix={
                                     <Button className="input-group-text send_btn" onClick={mesajGonder}>Gönder</Button>
                                 }

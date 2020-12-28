@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
 import { database } from './firebase';
 import { addChat, removeChat, addBlockedUser, removeBlockedUser } from '../redux/actions/action';
-import { Button, Col, Divider, Menu, notification, Row } from 'antd';
+import { Button, Col, Divider, Menu, notification, Row, Switch } from 'antd';
 import { MessageOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import { ArgsProps } from 'antd/lib/notification';
 
@@ -128,7 +128,14 @@ function Users(props: any) {
         var imgurl = contactItem.gender === GenderOption.Woman ? "../images/woman.png" : "../images/man.png";
         const args: ArgsProps = {
             key: contactItem.userName,
-            message: <span style={{ fontFamily: "cursive" }}> {contactItem.userName}</span>,
+            message: <>
+                <Row>
+                    <Col>
+                        <span style={{ fontFamily: "cursive" }}> {contactItem.userName}</span>
+                    </Col>
+                </Row>
+
+            </>,
             description: contentDetail,
             duration: 10,
             icon: <img style={{ height: "16px" }} src={imgurl}></img>,

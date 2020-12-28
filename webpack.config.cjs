@@ -40,7 +40,15 @@ module.exports = env => {
                     resolve: {
                         fullySpecified: false
                     }
-                }
+                },
+                {
+                    test: /\.(png|jpe?g|gif|mp3)$/i,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                        },
+                    ],
+                },
             ]
         },
         mode: 'development',
@@ -55,7 +63,7 @@ module.exports = env => {
                 patterns: [
                     { from: "images", to: "images" },
                 ],
-            })
+            }),
         ]
 
     }
