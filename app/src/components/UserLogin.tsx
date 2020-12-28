@@ -142,8 +142,8 @@ function UserLogin(props: UserLoginProps) {
                                         allowClear
                                         style={{ textAlign: "center" }}
                                     >
-                                        <Option value="woman"><img style={{ height: "32px" }} src={"../images/woman.png"}></img></Option>
-                                        <Option value="man"><img style={{ height: "32px" }} src="../images/man.png"></img></Option>
+                                        <Option value="Woman"><img style={{ height: "32px" }} src={"../images/woman.png"}></img></Option>
+                                        <Option value="Man"><img style={{ height: "32px" }} src="../images/man.png"></img></Option>
                                     </Select>
                                 </Form.Item>
                             </Col>

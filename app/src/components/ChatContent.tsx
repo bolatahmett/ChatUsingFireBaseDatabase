@@ -93,15 +93,7 @@ function ChatContent(props: ChatContentProps) {
                         return (
                             <TabPane key={item.key} closable={item.key !== "Genel"}
                                 tab={<TabNotification tabTitle={item.key} hasNewMessage={item.isMessageReceived} userName={item.key} />}>
-                                <Row style={{ height: "100%" }}>
-                                    <Col span={24} style={{ height: "100%" }}>
-                                        <div className="card-body msg_card_body" style={{ height: "100%" }}>
-                                            <div className="col-md-24" style={{ height: "100%" }}>
-                                                <MessageContent chatKey={item.key}></MessageContent>
-                                            </div>
-                                        </div>
-                                    </Col>
-                                </Row>
+                                <MessageContent chatKey={item.key} chatUser={item.key}></MessageContent>
                             </TabPane>
                         )
                     })

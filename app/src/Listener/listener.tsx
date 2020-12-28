@@ -17,25 +17,15 @@ export const chatMessagesListener = (userName: any, addChatMessage: any) => {
                 return;
             }
             var data = snapshot.val();
-            if (data.from == userName) {
-                addChatMessage({
-                    key: snapshot.key,
-                    message: data.message,
-                    timeOfMessage: data.timeOfMessage,
-                    to: data.to,
-                    from: data.from
-                } as ChatMessageModel);
-            } else {
-                addChatMessage({
-                    key: snapshot.key,
-                    from: data.from,
-                    to: data.to,
-                    message: data.message,
-                    timeOfMessage: data.timeOfMessage,
-                    color: data.color,
-                    gender: data.gender
-                } as ChatMessageModel);
-            }
+            addChatMessage({
+                key: snapshot.key,
+                from: data.from,
+                to: data.to,
+                message: data.message,
+                timeOfMessage: data.timeOfMessage,
+                color: data.color,
+                gender: data.gender
+            } as ChatMessageModel);
         });
     });
 }

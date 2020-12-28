@@ -5,7 +5,6 @@ import useSound from "use-sound";
 import * as soundUrl from "../sounds/909-drums.mp3";
 
 export default function Demo() {
-    debugger;
     const [play] = useSound(soundUrl.default, {
         sprite: {
             kick: [0, 350],

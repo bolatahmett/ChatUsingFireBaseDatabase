@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import { connect } from 'react-redux';
 import { clearHistory, showMenu, showUserOptions } from '../helper/helper'
 import UserContext from './UserContext';
 

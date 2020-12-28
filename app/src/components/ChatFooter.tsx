@@ -23,8 +23,6 @@ function ChatFooter(props: ChatFooterProps) {
 
     const mesajGonder = () => {
 
-
-
         if (context.user.userName != "" && messageInput != "") {
             var formattedTime = formatTime(new Date());
             var messageKey = database.ref("chats/").push().key;

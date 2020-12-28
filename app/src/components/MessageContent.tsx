@@ -5,11 +5,16 @@ import UserContext from './UserContext';
 import useSound from 'use-sound';
 // @ts-ignore
 import * as alarm from "../sounds/rising-pops.mp3";
+// @ts-ignore
+import * as guitar from "../sounds/guitar-loop.mp3";
+import { List, Comment, Button, Row, Col } from 'antd';
+import { CaretRightOutlined, PauseCircleFilled } from '@ant-design/icons';
 
 interface MessageContentProps {
     blockedUsers?: UserModel[];
     chatMessages: ChatMessageModel[];
     chatKey: string;
+    chatUser: string;
     notification: string[];
 }
 
@@ -17,10 +22,9 @@ function MessageContent(props: MessageContentProps) {
     const [messageItems, setMessageItems] = useState([])
     const context = useContext(UserContext);
     const [play] = useSound(alarm.default);
-
+    const [playGuitar, { stop, isPlaying }] = useSound(guitar.default);
 
     useEffect(() => {
-        debugger;
         if (props.chatMessages && props.chatMessages.length > 0) {
             props.chatMessages && setMessageItems(props.chatMessages);
             const lastMessage = props.chatMessages[props.chatMessages.length - 1];
@@ -36,9 +40,13 @@ function MessageContent(props: MessageContentProps) {
     }, [props.blockedUsers]);
 
     useEffect(() => {
-        $(".card-body").scrollTop($('.card-body')[0].scrollHeight - $('.card-body')[0].clientHeight);
+        const elemCard = $("#" + props.chatKey.trim() + "CardBody");
+        elemCard && elemCard.scrollTop(elemCard[0].scrollHeight - elemCard[0].clientHeight);
     });
 
+    const removeMessage = (key: string) => {
+        console.log("yapım asamasında");
+    }
 
     const canMessageShow = (item: ChatMessageModel, isBlockedUser: boolean) => {
         return ((
@@ -47,55 +55,53 @@ function MessageContent(props: MessageContentProps) {
             || (item.to === props.chatKey && item.from === context.user.userName)) && !isBlockedUser;
     }
 
-    const getMessageContentForFromMe = (uniqueKey: string, item: ChatMessageModel) => {
-        return (
-            <div id={item.key} className="d-flex justify-content-end">
-                <div className="message-me" role="alert" onClick={() => { showTimeOfMessage(uniqueKey); }}>{item.message}
-                    <div id={"timeOfMessage" + uniqueKey} style={{ display: "none" }}>
-                        {item.timeOfMessage}
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    const getMessageContentForFromOther = (uniqueKey: string, imgurl: string, item: ChatMessageModel) => {
-        return (
-            <div id={item.key} className="d-flex">
-                <div className="message-other" role="alert" onClick={() => showTimeOfMessage(uniqueKey)}>
-                    <img style={{ height: "16px" }} src={imgurl}></img>
-                    <b style={{ color: item.color }}> {item.from + ":"} </b> {item.message}
-                    <div id={"timeOfMessage" + uniqueKey} style={{ display: "none" }}>
-                        {item.timeOfMessage}
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <>
-            {
-                messageItems.map((item: ChatMessageModel, index: number) => {
-                    const uniqueKey = `${item.key}${index}`;
-                    const isBlockedUser = props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === item.from);
+            <Row style={{ height: "100%" }}>
+                <Col span={24} style={{ height: "100%" }}>
+                    <div id={`${props.chatKey.trim()}CardBody`} className="card-body msg_card_body" style={{ height: "100%" }}>
+                        <div className="col-md-24" style={{ height: "100%" }}>
+                            {
+                                <List
+                                    className="comment-list"
+                                    header={
+                                        <>
+                                            {
+                                                !isPlaying
+                                                    ? <Button onClick={() => playGuitar()}><CaretRightOutlined />Oynat</Button>
+                                                    : <Button onClick={() => stop()}><PauseCircleFilled />Durdur</Button>
+                                            }
+                                        </>
+                                    }
+                                    itemLayout="horizontal"
+                                    dataSource={messageItems}
+                                    size={"small"}
+                                    renderItem={(item: ChatMessageModel) => (
+                                        <li>
+                                            {
+                                                canMessageShow(item, props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === item.from)) && < Comment
+                                                    // actions={[
+                                                    //     <span onClick={() => removeMessage(item.key)} key="comment-list-reply-to-0">Sil</span>
+                                                    // ]}
+                                                    author={item.from}
+                                                    avatar={item.gender === GenderOption.Woman ? "../images/woman.png" : "../images/man.png"}
+                                                    content={item.message}
+                                                    datetime={item.timeOfMessage}
+                                                />}
+                                        </li>
+                                    )}
+                                />
+                            }
+                        </div>
+                    </div>
+                </Col>
+            </Row>
 
-                    if (canMessageShow(item, isBlockedUser)) {
-                        if (item.from !== context.user.userName) {
-                            var imgurl = item.gender === GenderOption.Woman ? "../images/woman.png" : "../images/man.png";
-                            return getMessageContentForFromOther(uniqueKey, imgurl, item);
-                        } else {
-                            return getMessageContentForFromMe(uniqueKey, item);
-                        }
-                    }
-                })
-            }
         </>
     )
 }
 
 const mapStateToProps = (state: any) => {
-    debugger;
     const chatMessages = state.chatMessages;
     const blockedUsers = state.blockedUsers;
     const notification = state.notification;
