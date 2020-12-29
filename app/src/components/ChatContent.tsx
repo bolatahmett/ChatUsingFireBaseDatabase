@@ -23,13 +23,13 @@ interface ChatContentProps {
 function ChatContent(props: ChatContentProps) {
     const context = useContext(UserContext);
     const [tabChatContent, setTabChatContent] = useState([]);
-    const [activeTabKey, setActiveTabKey] = useState("1");
 
     useEffect(() => {
         chatMessagesListener(context.user.userName, props.addChatMessages);
     }, []);
 
     useEffect(() => {
+        debugger;
         if (props.chatMessages && props.chatMessages.length > 0) {
             const messageContent = props.chatMessages[props.chatMessages.length - 1];
             addChatFromReceivedMessage(messageContent);
@@ -39,7 +39,6 @@ function ChatContent(props: ChatContentProps) {
 
     useEffect(() => {
         setTabChatContent(props.startedChatUser);
-        props.startedChatUser.length > 0 && setActiveTabKey(props.startedChatUser[props.startedChatUser.length - 1].key);
     }, [props.startedChatUser]);
 
     const addChatFromReceivedMessage = (messageContent: ChatMessageModel) => {
@@ -50,25 +49,36 @@ function ChatContent(props: ChatContentProps) {
                 }
             });
 
-            !checkIfExist && props.addChat(messageContent.from);
+            if (!checkIfExist) {
+                const chatUserModel: ChatUserModel = {
+                    key: messageContent.from,
+                    isActive: false,
+                    isMessageReceived: true
+                } as ChatUserModel;
+                props.addChat(chatUserModel);
+            }
+
         }
     }
 
     const alertUserForReceivedMessage = (messageContent: ChatMessageModel) => {
-        if (messageContent.to === context.user.userName && messageContent.from !== activeTabKey) {
-            tabChatContent.forEach((item: ChatUserModel) => {
+        if (messageContent.to === context.user.userName && messageContent.from !== getActiveKey()) {
+            const alertTabChatContent = tabChatContent.slice();
+            alertTabChatContent.forEach((item: ChatUserModel) => {
                 if (item.key === messageContent.from)
                     item.isMessageReceived = true;
             });
-            setTabChatContent(tabChatContent);
+            setTabChatContent(alertTabChatContent);
         }
     }
 
     const changeTab = (activeKey: string) => {
-        props.activateChat(activeKey);
-        setActiveTabKey(activeKey);
-        tabChatContent.forEach((item: ChatUserModel) => { if (item.key === activeKey) item.isMessageReceived = false; });
-        setTabChatContent(tabChatContent);
+        const chatUserModel: ChatUserModel = {
+            key: activeKey,
+            isActive: true,
+            isMessageReceived: false
+        } as ChatUserModel;
+        props.activateChat(chatUserModel);
     };
 
     const onEdit = (targetKey: string, action: any) => {
@@ -76,12 +86,27 @@ function ChatContent(props: ChatContentProps) {
     };
 
     const remove = (targetKey: string) => {
-        props.removeChat(targetKey);
+        const chatUserModel: ChatUserModel = {
+            key: targetKey,
+            isActive: false,
+            isMessageReceived: false
+        } as ChatUserModel;
+        props.removeChat(chatUserModel);
     };
+
+    const getActiveKey = () => {
+        const activeItem: ChatUserModel = tabChatContent.find((item: ChatUserModel) => {
+            if (item.isActive) {
+                return item;
+            }
+        });
+
+        return activeItem && activeItem.key;
+    }
 
     return (
         <>
-            <Tabs activeKey={activeTabKey}
+            <Tabs activeKey={getActiveKey()}
                 type="editable-card"
                 size={"small"}
                 hideAdd

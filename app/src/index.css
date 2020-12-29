@@ -308,3 +308,13 @@
  .ant-menu-submenu-expand-icon, .ant-menu-submenu-arrow {
      visibility: hidden;
 }
+
+
+.ant-comment-content {
+    font-size: x-small !important;
+}
+
+.ant-comment-inner {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}

@@ -18,7 +18,7 @@ function ChatFooter(props: ChatFooterProps) {
 
     const getActiveChatUser = () => {
         const toUser = props.startedChatUser.find((item: ChatUserModel) => { if (item.isActive) return item; });
-        return toUser.key;
+        return toUser && toUser.key;
     }
 
     const mesajGonder = () => {

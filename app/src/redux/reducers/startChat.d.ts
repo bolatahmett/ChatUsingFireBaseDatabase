@@ -1,5 +1,5 @@
 declare const startChat: (state: ChatUserModel[], action: {
     type: any;
-    userName: string;
+    chatUserModel: ChatUserModel;
 }) => ChatUserModel[];
 export default startChat;

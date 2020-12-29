@@ -31,7 +31,14 @@ function UserLogin(props: UserLoginProps) {
 
     const loadChat = (user: UserModel) => {
         props.loginUser(user);
-        props.addChat("Genel");
+
+        const chatUserModel: ChatUserModel = {
+            key: 'Genel',
+            isActive: true,
+            isMessageReceived: false
+        } as ChatUserModel;
+        props.addChat(chatUserModel);
+
         $("#girisEkrani").hide();
         $("#chatEkrani").show();
     }
@@ -113,7 +120,7 @@ function UserLogin(props: UserLoginProps) {
         <>
             <FireWorksCanvas />
             <Row id="girisEkrani" justify="center" className={"vertical-center"}>
-                <Col xs={20} sm={20} md={16} lg={12} xl={6} >
+                <Col xs={16} sm={16} md={12} lg={8} xl={6} >
                     <div className="d-flex bd-highlight">
                         <div className="user_info">
                             <span style={{ fontFamily: "cursive" }}>Keyfili Sohbetler</span>
@@ -203,5 +210,5 @@ const mapStateToProps = (state: any) => {
 
 export default connect(mapStateToProps, {
     loginUser,
-    addChat
+    addChat,
 })(UserLogin);

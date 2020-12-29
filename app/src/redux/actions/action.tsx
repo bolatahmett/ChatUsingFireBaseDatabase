@@ -3,19 +3,19 @@ export const loginUser = (user: UserModel) => ({
     user: user
 });
 
-export const addChat = (userName: any) => ({
+export const addChat = (chatUserModel: ChatUserModel) => ({
     type: 'ADD_CHAT',
-    userName: userName
+    chatUserModel: chatUserModel
 });
 
-export const removeChat = (userName: string) => ({
+export const removeChat = (chatUserModel: ChatUserModel) => ({
     type: 'REMOVE_CHAT',
-    userName: userName
+    chatUserModel: chatUserModel
 });
 
-export const activateChat = (userName: string) => ({
+export const activateChat = (chatUserModel: ChatUserModel) => ({
     type: 'ACTIVATE_CHAT',
-    userName: userName
+    chatUserModel: chatUserModel
 });
 
 export const addChatMessages = (messageContent: ChatMessageModel) => ({

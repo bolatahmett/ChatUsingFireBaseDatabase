@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
 import { database } from './firebase';
 import { addChat, removeChat, addBlockedUser, removeBlockedUser } from '../redux/actions/action';
-import { Button, Col, Divider, Menu, notification, Row, Switch } from 'antd';
-import { MessageOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
+import { Button, Col, Divider, Menu, notification, Row } from 'antd';
+import {
+    MessageOutlined, EyeInvisibleOutlined, EyeOutlined
+} from '@ant-design/icons';
 import { ArgsProps } from 'antd/lib/notification';
 
 
@@ -11,10 +13,20 @@ function Users(props: any) {
 
     const [contactItems, setContactItem] = useState([]);
     const [searchItem, setSearchItem] = useState("");
+    const [menuCollapsed, setMenuCollapsed] = useState(false);
 
     useEffect(() => {
         userLoad();
     }, []);
+
+    useEffect(() => {
+        setMenuCollapsed(getActiveChatUser() === 'Genel');
+    }, [props.startedChatUser]);
+
+    const getActiveChatUser = () => {
+        const toUser = props.startedChatUser.find((item: ChatUserModel) => { if (item.isActive) return item; });
+        return toUser && toUser.key;
+    }
 
     const userLoad = () => {
         database.ref("users").orderByChild("userName").on('value', (snapshot: any) => {
@@ -41,7 +53,12 @@ function Users(props: any) {
     }
 
     const startChat = (userName: string) => {
-        props.addChat(userName);
+        const chatUserModel: ChatUserModel = {
+            key: userName,
+            isActive: true,
+            isMessageReceived: false
+        } as ChatUserModel;
+        props.addChat(chatUserModel);
     }
 
     const getUserInfo = (user: UserModel) => {
@@ -166,27 +183,31 @@ function Users(props: any) {
 
     return (
         <>
-            <div style={{ height: "100%" }}>
-                <div className="form-group has-search">
-                    <span className="fa fa-search form-control-feedback"></span>
-                    <input type="text" className="form-control search" placeholder="Search" id="searchUser" onKeyDown={handleSearch}></input>
-                </div>
-                <Menu mode="inline"
-                    inlineIndent={24}
-                    className={"chat-menu"}
-                >
-                    {getContactItemsForMenu()}
-                </Menu>
-            </div>
-        </>
+            {
+                menuCollapsed && <Col xs={6} sm={6} md={3} lg={3} xl={3} className=" chat card mb-sm-3 mb-md-0 contacts_card"
+                    style={{ height: "100%" }}>
+                    <div className="form-group has-search">
+                        <span className="fa fa-search form-control-feedback"></span>
+                        <input type="text" className="form-control search" placeholder="Search" id="searchUser" onKeyDown={handleSearch}></input>
+                    </div>
 
+                    <Menu mode="inline"
+                        inlineIndent={24}
+                        className={"chat-menu"}
+                    >
+                        {getContactItemsForMenu()}
+                    </Menu>
+                </Col>
+            }
+        </>
     )
 }
 
 const mapStateToProps = (state: any) => {
+    const startedChatUser = state.startChat;
     const user = state.user;
     const blockedUsers = state.blockedUsers;
-    return { user, blockedUsers };
+    return { user, blockedUsers, startedChatUser };
 };
 
 export default connect(mapStateToProps, {
