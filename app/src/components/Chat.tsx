@@ -7,6 +7,7 @@ import Users from './Users';
 import { setOnline } from '../helper/helper';
 import UserContext from './UserContext';
 import { Col, Row } from 'antd';
+import { sharingListener } from '../listener/listener';
 
 
 const doSomethingBeforeUnload = (userName: string) => {
@@ -31,6 +32,10 @@ export default function Chat() {
     useEffect(() => {
         setupBeforeUnloadListener(context.user.userName);
     });
+
+    useEffect(() => {
+        sharingListener(context.user.userName, context.sharePlayer);
+    }, []);
 
     return (
         <>

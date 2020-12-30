@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { addChat, removeChat, activateChat } from '../redux/actions/action';
 import { addChatMessages } from '../redux/actions/action';
 import { chatMessagesListener } from '../listener/listener';
-import { Col, Row, Tabs } from 'antd';
+import { Tabs } from 'antd';
 import MessageContent from './MessageContent';
 import TabNotification from './TabNotification';
 import UserContext from './UserContext';
@@ -29,7 +29,6 @@ function ChatContent(props: ChatContentProps) {
     }, []);
 
     useEffect(() => {
-        debugger;
         if (props.chatMessages && props.chatMessages.length > 0) {
             const messageContent = props.chatMessages[props.chatMessages.length - 1];
             addChatFromReceivedMessage(messageContent);
@@ -118,7 +117,9 @@ function ChatContent(props: ChatContentProps) {
                         return (
                             <TabPane key={item.key} closable={item.key !== "Genel"}
                                 tab={<TabNotification tabTitle={item.key} hasNewMessage={item.isMessageReceived} userName={item.key} />}>
-                                <MessageContent chatKey={item.key} chatUser={item.key}></MessageContent>
+                                <>
+                                    <MessageContent chatKey={item.key} chatUser={item.key}></MessageContent>
+                                </>
                             </TabPane>
                         )
                     })

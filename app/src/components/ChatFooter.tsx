@@ -1,10 +1,11 @@
-import { Button, Col, Input, Row } from 'antd';
+import { Button, Col, Input, Row, Tooltip } from 'antd';
 import React, { useState } from 'react'
 import { useContext } from 'react';
 import { connect } from 'react-redux';
 import { formatTime } from '../helper/helper'
 import { database } from './firebase';
 import UserContext from './UserContext';
+import { ShareAltOutlined } from '@ant-design/icons';
 
 interface ChatFooterProps {
     startedChatUser: ChatUserModel[];
@@ -48,6 +49,8 @@ function ChatFooter(props: ChatFooterProps) {
         setMessageInput(e.target.value);
     }
 
+
+
     return (
         <>
             <Row justify="space-around" align="middle" style={{ height: "50px" }}>
@@ -62,7 +65,12 @@ function ChatFooter(props: ChatFooterProps) {
                                 style={{ fontSize: "small", borderRadius: "20px" }}
                                 onPressEnter={mesajGonder}
                                 suffix={
-                                    <Button className="input-group-text send_btn" onClick={mesajGonder}>Gönder</Button>
+                                    <>
+                                        <Button className="input-group-text send_btn" onClick={mesajGonder}>Gönder</Button>
+                                        <Tooltip title={"Video Paylaş"}>
+                                            <Button shape="circle" onClick={context.sharePlayer}><ShareAltOutlined /></Button>
+                                        </Tooltip>
+                                    </>
                                 }
                             />
                         </div>

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react'
 import { connect } from 'react-redux';
-import { showTimeOfMessage } from '../helper/helper';
 import UserContext from './UserContext';
 import useSound from 'use-sound';
 // @ts-ignore
@@ -23,6 +22,7 @@ function MessageContent(props: MessageContentProps) {
     const context = useContext(UserContext);
     const [play] = useSound(alarm.default);
     const [playGuitar, { stop, isPlaying }] = useSound(guitar.default);
+    let prevItem: ChatMessageModel = undefined;
 
     useEffect(() => {
         if (props.chatMessages && props.chatMessages.length > 0) {
@@ -55,6 +55,34 @@ function MessageContent(props: MessageContentProps) {
             || (item.to === props.chatKey && item.from === context.user.userName)) && !isBlockedUser;
     }
 
+    const getComemntContent = (item: ChatMessageModel) => {
+
+        let result = <></>;
+
+        if (canMessageShow(item, props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === item.from))) {
+
+            if (prevItem && prevItem.from == item.from && prevItem.to && item.to) {
+                result = <li style={{ marginLeft: "45px" }}> <Comment content={item.message} /> </li>;
+
+            } else {
+
+                result = <li>
+                    <Comment
+                        // actions={[
+                        //     <span onClick={() => removeMessage(item.key)} key="comment-list-reply-to-0">Sil</span>
+                        // ]}
+                        author={item.from}
+                        avatar={item.gender === GenderOption.Woman ? "../images/woman.png" : "../images/man.png"}
+                        content={item.message}
+                        datetime={item.timeOfMessage} />
+                </li>
+            }
+        }
+        prevItem = item;
+
+        return result;
+    }
+
     return (
         <>
             <Row style={{ height: "100%" }}>
@@ -77,18 +105,12 @@ function MessageContent(props: MessageContentProps) {
                                     dataSource={messageItems}
                                     size={"small"}
                                     renderItem={(item: ChatMessageModel) => (
-                                        <li>
+                                        <>
                                             {
-                                                canMessageShow(item, props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === item.from)) && < Comment
-                                                    // actions={[
-                                                    //     <span onClick={() => removeMessage(item.key)} key="comment-list-reply-to-0">Sil</span>
-                                                    // ]}
-                                                    author={item.from}
-                                                    avatar={item.gender === GenderOption.Woman ? "../images/woman.png" : "../images/man.png"}
-                                                    content={item.message}
-                                                    datetime={item.timeOfMessage}
-                                                />}
-                                        </li>
+                                                getComemntContent(item)
+                                            }
+                                        </>
+
                                     )}
                                 />
                             }

@@ -1,4 +1,3 @@
-import Item from "antd/lib/list/Item";
 
 const startChat = (state: ChatUserModel[] = [], action: { type: any; chatUserModel: ChatUserModel }) => {
     switch (action.type) {
