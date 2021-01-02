@@ -61,9 +61,11 @@ export default function FireWorksCanvas() {
     function setCanvasSize(canvasEl: any) {
         canvasEl.width = window.innerWidth * 2;
         canvasEl.height = window.innerHeight * 2;
-        canvasEl.style.width = window.innerWidth + 'px';
-        canvasEl.style.height = window.innerHeight + 'px';
-        canvasEl.getContext('2d').scale(2, 2);
+        if (canvasEl.style) {
+            canvasEl.style.width = window.innerWidth + 'px';
+            canvasEl.style.height = window.innerHeight + 'px';
+        }
+        canvasEl.getContext && canvasEl.getContext('2d') && canvasEl.getContext('2d').scale(2, 2);
     }
 
     function updateCoords(e: any) {
@@ -157,7 +159,7 @@ export default function FireWorksCanvas() {
     return (
         <>
             <div style={{ position: "absolute", height: "100%" }}>
-                <canvas className="fireworks"></canvas>
+                <canvas className="fireworks" style={{ maxHeight: "800px !important" }}></canvas>
             </div>
             <img id={"fireworksButton"} src={"../../../images/balloons.png"} style={{ position: "absolute", paddingTop: "10px", zIndex: 99999 }}></img>
         </>

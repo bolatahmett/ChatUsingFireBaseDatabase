@@ -1,13 +1,15 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { connect } from 'react-redux';
 import UserContext from './UserContext';
+import { List, Comment, Row, Col } from 'antd';
+import ReactPlayer from 'react-player';
 import useSound from 'use-sound';
 // @ts-ignore
 import * as alarm from "../sounds/rising-pops.mp3";
+import AudioPlayer from './audio-player';
 // @ts-ignore
-import * as guitar from "../sounds/guitar-loop.mp3";
-import { List, Comment, Button, Row, Col } from 'antd';
-import { CaretRightOutlined, PauseCircleFilled } from '@ant-design/icons';
+const ReactPlayerDefault = ReactPlayer.default;
+
 
 interface MessageContentProps {
     blockedUsers?: UserModel[];
@@ -21,7 +23,6 @@ function MessageContent(props: MessageContentProps) {
     const [messageItems, setMessageItems] = useState([])
     const context = useContext(UserContext);
     const [play] = useSound(alarm.default);
-    const [playGuitar, { stop, isPlaying }] = useSound(guitar.default);
     let prevItem: ChatMessageModel = undefined;
 
     useEffect(() => {
@@ -55,25 +56,55 @@ function MessageContent(props: MessageContentProps) {
             || (item.to === props.chatKey && item.from === context.user.userName)) && !isBlockedUser;
     }
 
-    const getComemntContent = (item: ChatMessageModel) => {
+    const getUrlFromMessage = (message: string) => {
 
+        const arrayMessage = message.split(' ');
+        const url = arrayMessage.find((item: string) => {
+            if (item.startsWith('http'))
+                return item;
+        });
+        return url;
+    }
+
+    const getMessageContent = (message: string) => {
+        const shareUrl = getUrlFromMessage(message);
+
+        if (shareUrl) {
+
+            return <>
+                <div className='player-wrapper'>
+                    <ReactPlayerDefault
+                        className='react-player'
+                        url={shareUrl}
+                        width='100%'
+                        height='100%'
+                    />
+                </div>
+                <p>{message}</p>
+            </>;
+        } else {
+            return message;
+        }
+    }
+
+    const getComemntContent = (item: ChatMessageModel) => {
         let result = <></>;
 
         if (canMessageShow(item, props.blockedUsers.some((blockedUser: UserModel) => blockedUser.userName === item.from))) {
 
+
             if (prevItem && prevItem.from == item.from && prevItem.to && item.to) {
-                result = <li style={{ marginLeft: "45px" }}> <Comment content={item.message} /> </li>;
+                result = <li style={{ marginLeft: "45px" }}>
+                    <Comment content={getMessageContent(item.message)} />
+                </li>;
 
             } else {
 
                 result = <li>
                     <Comment
-                        // actions={[
-                        //     <span onClick={() => removeMessage(item.key)} key="comment-list-reply-to-0">Sil</span>
-                        // ]}
                         author={item.from}
                         avatar={item.gender === GenderOption.Woman ? "../images/woman.png" : "../images/man.png"}
-                        content={item.message}
+                        content={getMessageContent(item.message)}
                         datetime={item.timeOfMessage} />
                 </li>
             }
@@ -87,38 +118,35 @@ function MessageContent(props: MessageContentProps) {
         <>
             <Row style={{ height: "100%" }}>
                 <Col span={24} style={{ height: "100%" }}>
-                    <div id={`${props.chatKey.trim()}CardBody`} className="card-body msg_card_body" style={{ height: "100%" }}>
-                        <div className="col-md-24" style={{ height: "100%" }}>
-                            {
-                                <List
-                                    className="comment-list"
-                                    header={
-                                        <>
-                                            {
-                                                !isPlaying
-                                                    ? <Button onClick={() => playGuitar()}><CaretRightOutlined />Oynat</Button>
-                                                    : <Button onClick={() => stop()}><PauseCircleFilled />Durdur</Button>
-                                            }
-                                        </>
-                                    }
-                                    itemLayout="horizontal"
-                                    dataSource={messageItems}
-                                    size={"small"}
-                                    renderItem={(item: ChatMessageModel) => (
-                                        <>
-                                            {
-                                                getComemntContent(item)
-                                            }
-                                        </>
 
-                                    )}
-                                />
-                            }
+                    <div className="message-container">
+                        <div className="box"> <AudioPlayer></AudioPlayer></div>
+
+                        <div id={`${props.chatKey.trim()}CardBody`} className=" box box-2 card-body msg_card_body">
+                            <div className="col-md-24" style={{ height: "100%" }}>
+                                {
+                                    <List
+                                        className="comment-list"
+                                        itemLayout="horizontal"
+                                        dataSource={messageItems}
+                                        size={"small"}
+                                        renderItem={(item: ChatMessageModel) => (
+                                            <>
+                                                {
+                                                    getComemntContent(item)
+                                                }
+                                            </>
+
+                                        )}
+                                    />
+                                }
+                            </div>
                         </div>
+
                     </div>
+
                 </Col>
             </Row>
-
         </>
     )
 }

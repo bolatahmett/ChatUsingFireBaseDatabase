@@ -1,4 +1,4 @@
-import { Button, Col, Input, Row, Tooltip } from 'antd';
+import { Button, Col, Input, Popconfirm, Row, Tooltip } from 'antd';
 import React, { useState } from 'react'
 import { useContext } from 'react';
 import { connect } from 'react-redux';
@@ -49,6 +49,9 @@ function ChatFooter(props: ChatFooterProps) {
         setMessageInput(e.target.value);
     }
 
+    const confirm = () => {
+        context.sharePlayer({});
+    }
 
 
     return (
@@ -68,7 +71,15 @@ function ChatFooter(props: ChatFooterProps) {
                                     <>
                                         <Button className="input-group-text send_btn" onClick={mesajGonder}>Gönder</Button>
                                         <Tooltip title={"Video Paylaş"}>
-                                            <Button shape="circle" onClick={context.sharePlayer}><ShareAltOutlined /></Button>
+                                            <Popconfirm
+                                                title={`${getActiveChatUser()} ile paylaşım yapmaya devam etmek istiyor musunuz?`}
+                                                onConfirm={confirm}
+                                                okText="Yes"
+                                                cancelText="No"
+                                            >
+                                                <ShareAltOutlined style={{ width: "50px" }} />
+                                            </Popconfirm>
+
                                         </Tooltip>
                                     </>
                                 }

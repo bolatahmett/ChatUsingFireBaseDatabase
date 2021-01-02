@@ -8,6 +8,7 @@ import { setOnline } from '../helper/helper';
 import UserContext from './UserContext';
 import { Col, Row } from 'antd';
 import { sharingListener } from '../listener/listener';
+import { connect } from 'react-redux';
 
 
 const doSomethingBeforeUnload = (userName: string) => {
@@ -25,9 +26,10 @@ const setupBeforeUnloadListener = (userName: string) => {
     });
 };
 
-export default function Chat() {
+function Chat(props: any) {
 
     const context = useContext(UserContext);
+    const [menuCollapsed, setMenuCollapsed] = useState(false);
 
     useEffect(() => {
         setupBeforeUnloadListener(context.user.userName);
@@ -36,6 +38,15 @@ export default function Chat() {
     useEffect(() => {
         sharingListener(context.user.userName, context.sharePlayer);
     }, []);
+
+    useEffect(() => {
+        setMenuCollapsed(getActiveChatUser() === 'Genel');
+    }, [props.startedChatUser]);
+
+    const getActiveChatUser = () => {
+        const toUser = props.startedChatUser.find((item: ChatUserModel) => { if (item.isActive) return item; });
+        return toUser && toUser.key;
+    }
 
     return (
         <>
@@ -46,14 +57,22 @@ export default function Chat() {
             </Row>
 
             <Row id="chatEkrani" justify="center" style={{ height: "calc(100% - 130px)", display: "none" }}>
-                <Col flex="auto" className="chat" style={{ height: "100%" }}>
+                <Col xs={menuCollapsed ? 18 : 24} sm={menuCollapsed ? 18 : 24} md={menuCollapsed ? 21 : 24} lg={menuCollapsed ? 21 : 24} xl={menuCollapsed ? 21 : 24} className="chat" style={{ height: "100%" }}>
                     <div className="card" style={{ height: "100%" }}>
                         <ChatContent></ChatContent>
                     </div>
                 </Col>
-                <Users></Users>
+                {menuCollapsed && <Users></Users>}
             </Row>
             <ChatFooter></ChatFooter>
         </>
     )
 }
+
+const mapStateToProps = (state: any) => {
+    const startedChatUser = state.startChat;
+    return { startedChatUser };
+};
+
+export default connect(mapStateToProps, null)(Chat);
+

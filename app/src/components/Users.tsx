@@ -13,20 +13,11 @@ function Users(props: any) {
 
     const [contactItems, setContactItem] = useState([]);
     const [searchItem, setSearchItem] = useState("");
-    const [menuCollapsed, setMenuCollapsed] = useState(false);
+
 
     useEffect(() => {
         userLoad();
     }, []);
-
-    useEffect(() => {
-        setMenuCollapsed(getActiveChatUser() === 'Genel');
-    }, [props.startedChatUser]);
-
-    const getActiveChatUser = () => {
-        const toUser = props.startedChatUser.find((item: ChatUserModel) => { if (item.isActive) return item; });
-        return toUser && toUser.key;
-    }
 
     const userLoad = () => {
         database.ref("users").orderByChild("userName").on('value', (snapshot: any) => {
@@ -184,7 +175,7 @@ function Users(props: any) {
     return (
         <>
             {
-                menuCollapsed && <Col xs={6} sm={6} md={3} lg={3} xl={3} className=" chat card mb-sm-3 mb-md-0 contacts_card"
+                <Col xs={6} sm={6} md={3} lg={3} xl={3} className=" chat card mb-sm-3 mb-md-0 contacts_card"
                     style={{ height: "100%" }}>
                     <div className="form-group has-search">
                         <span className="fa fa-search form-control-feedback"></span>

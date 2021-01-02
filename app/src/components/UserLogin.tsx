@@ -118,8 +118,10 @@ function UserLogin(props: UserLoginProps) {
 
     return (
         <>
+
             <FireWorksCanvas />
             <Row id="girisEkrani" justify="center" className={"vertical-center"}>
+
                 <Col xs={16} sm={16} md={12} lg={8} xl={6} >
                     <div className="d-flex bd-highlight">
                         <div className="user_info">

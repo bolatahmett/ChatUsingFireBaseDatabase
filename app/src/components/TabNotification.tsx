@@ -2,6 +2,7 @@ import { Col, Row, Switch, Tooltip } from 'antd'
 import React from 'react'
 import { connect } from 'react-redux';
 import { addNotification, removeNotification } from '../redux/actions/action';
+import { MessageTwoTone } from '@ant-design/icons';
 
 interface TabNotificationProps {
     tabTitle: string;
@@ -13,11 +14,7 @@ interface TabNotificationProps {
 
 function TabNotification(props: TabNotificationProps) {
     const onChange = (checked: boolean) => {
-        if (checked) {
-            props.addNotification(props.userName);
-        } else {
-            props.removeNotification(props.userName);
-        }
+        checked ? props.addNotification(props.userName) : props.removeNotification(props.userName);
     }
 
     return (
@@ -25,7 +22,7 @@ function TabNotification(props: TabNotificationProps) {
             <Row>
                 <Col span={18}>
                     {props.hasNewMessage
-                        ? <span style={{ backgroundColor: "red" }}>{props.tabTitle}</span>
+                        ? <><MessageTwoTone /><span>{props.tabTitle}</span></>
                         : <span >{props.tabTitle}</span>}
                 </Col>
                 <Col span={2} offset={1}>
