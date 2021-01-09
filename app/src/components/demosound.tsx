@@ -1,11 +1,13 @@
 import { Button } from "antd";
+import { Howl } from "howler";
 import React from "react";
-import useSound from "use-sound";
 // @ts-ignore
 import * as soundUrl from "../sounds/909-drums.mp3";
 
 export default function Demo() {
-    const [play] = useSound(soundUrl.default, {
+
+    var sound = new Howl({
+        src: [soundUrl.default],
         sprite: {
             kick: [0, 350],
             hihat: [374, 160],
@@ -14,31 +16,33 @@ export default function Demo() {
         }
     });
 
+    sound.play();
+
 
 
     return (
         <>
             <Button
                 aria-label="kick"
-                onClick={() => { console.log(soundUrl); play({ id: 'kick' }); }}
+                onClick={() => { console.log(soundUrl); sound.play('kick'); }}
             >
                 1
             </Button>
             <Button
                 aria-label="hihat"
-                onClick={() => play({ id: 'hihat' })}
+                onClick={() => sound.play('hihat')}
             >
                 2
       </Button>
             <Button
                 aria-label="snare"
-                onClick={() => play({ id: 'snare' })}
+                onClick={() => sound.play('snare')}
             >
                 3
       </Button>
             <Button
                 aria-label="cowbell"
-                onClick={() => play({ id: 'cowbell' })}
+                onClick={() => sound.play('cowbell')}
             >
                 4
       </Button>

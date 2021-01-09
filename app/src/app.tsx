@@ -11,7 +11,6 @@ import {
     CheckCircleFilled, CloseCircleFilled
 } from '@ant-design/icons';
 
-
 interface AppProps {
     firebase: any;
     database: any;

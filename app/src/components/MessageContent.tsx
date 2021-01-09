@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import UserContext from './UserContext';
 import { List, Comment, Row, Col } from 'antd';
 import ReactPlayer from 'react-player';
-import useSound from 'use-sound';
 // @ts-ignore
 import * as alarm from "../sounds/rising-pops.mp3";
 import AudioPlayer from './audio-player';
+import { Howl } from 'howler';
 // @ts-ignore
 const ReactPlayerDefault = ReactPlayer.default;
 
@@ -22,7 +22,10 @@ interface MessageContentProps {
 function MessageContent(props: MessageContentProps) {
     const [messageItems, setMessageItems] = useState([])
     const context = useContext(UserContext);
-    const [play] = useSound(alarm.default);
+    const sound = new Howl({
+        src: [alarm.default]
+    });
+
     let prevItem: ChatMessageModel = undefined;
 
     useEffect(() => {
@@ -30,7 +33,7 @@ function MessageContent(props: MessageContentProps) {
             props.chatMessages && setMessageItems(props.chatMessages);
             const lastMessage = props.chatMessages[props.chatMessages.length - 1];
             if (lastMessage.from !== context.user.userName && props.notification.some((item: string) => { return item === lastMessage.from })) {
-                play();
+                sound.play();
             }
         }
 

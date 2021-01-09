@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import anime from 'animejs';
-import useSound from 'use-sound';
 // @ts-ignore
 import * as alarm from "../sounds/camkirilma1.mp3";
 // @ts-ignore
 import * as alarmDone from "../sounds/fanfare.mp3";
+import { Howl } from 'howler';
 
 export default function FireWorksCanvas() {
 
@@ -15,8 +15,13 @@ export default function FireWorksCanvas() {
     var ctx: any = null;
     // var tap = ('ontouchstart' in window || navigator.msMaxTouchPoints) ? 'touchstart' : 'mousedown';
     var colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
-    const [play] = useSound(alarm.default);
-    const [playDone] = useSound(alarmDone.default);
+    const alarmSound = new Howl({
+        src: [alarm.default]
+    });
+
+    const alarmSoundDone = new Howl({
+        src: [alarmDone.default]
+    });
 
     useEffect(() => {
         var canvasEl: any = document.querySelector('.fireworks');
@@ -41,10 +46,10 @@ export default function FireWorksCanvas() {
             render.play();
             const randomNumber = Math.floor(Math.random() * 100);
             if (randomNumber > 100 || counterClick > 10) {
-                playDone();
+                alarmSoundDone.play();
                 document.getElementById("fireworksButton").hidden = true;
             } else {
-                play();
+                alarmSound.play()
                 document.getElementById("fireworksButton").style.paddingLeft = randomNumber + "%";
             }
 
