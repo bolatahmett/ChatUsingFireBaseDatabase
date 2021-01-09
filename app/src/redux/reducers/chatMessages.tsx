@@ -6,4 +6,5 @@ const chatMessages = (state: ChatMessageModel[] = [], action: { type: any; messa
             return state;
     }
 }
+
 export default chatMessages;
