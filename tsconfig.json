@@ -12,6 +12,7 @@
         "experimentalDecorators": true,
         "moduleResolution": "node",
         "declaration": true,
+        "noUnusedLocals": true
     },
     "include": [
         "app/src"
