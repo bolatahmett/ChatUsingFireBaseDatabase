@@ -45,9 +45,6 @@ function MessageContent(props: MessageContentProps) {
         elemCard && elemCard.scrollTop(elemCard[0].scrollHeight - elemCard[0].clientHeight);
     });
 
-    const removeMessage = (key: string) => {
-        console.log("yapım asamasında");
-    }
 
     const canMessageShow = (item: ChatMessageModel, isBlockedUser: boolean) => {
         return ((

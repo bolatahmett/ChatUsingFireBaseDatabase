@@ -6,11 +6,10 @@ import { connect } from 'react-redux';
 import UserContext from './components/UserContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import VideoPlayer from './components/player';
-import { Button, message, notification } from 'antd';
+import { Button, notification } from 'antd';
 import {
     CheckCircleFilled, CloseCircleFilled
 } from '@ant-design/icons';
-import FireWorksCanvas from './anime/fireWorksCanvas';
 
 
 interface AppProps {

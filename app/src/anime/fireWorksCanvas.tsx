@@ -13,7 +13,7 @@ export default function FireWorksCanvas() {
     var pointerX = 0;
     var pointerY = 0;
     var ctx: any = null;
-    var tap = ('ontouchstart' in window || navigator.msMaxTouchPoints) ? 'touchstart' : 'mousedown';
+    // var tap = ('ontouchstart' in window || navigator.msMaxTouchPoints) ? 'touchstart' : 'mousedown';
     var colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
     const [play] = useSound(alarm.default);
     const [playDone] = useSound(alarmDone.default);

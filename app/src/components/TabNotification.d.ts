@@ -7,5 +7,5 @@ interface TabNotificationProps {
     removeNotification: any;
 }
 declare function TabNotification(props: TabNotificationProps): JSX.Element;
-declare const _default: import("react-redux").ConnectedComponent<typeof TabNotification, Pick<TabNotificationProps, "tabTitle" | "hasNewMessage" | "userName">>;
+declare const _default: import("react-redux").ConnectedComponent<typeof TabNotification, Pick<TabNotificationProps, "userName" | "tabTitle" | "hasNewMessage">>;
 export default _default;

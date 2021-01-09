@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import '../index.css';
 import ChatFooter from './ChatFooter';
 import ChatHeader from './ChatHeader';

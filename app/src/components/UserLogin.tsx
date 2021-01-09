@@ -15,10 +15,6 @@ interface UserLoginProps {
     addChat: any;
 }
 
-const tailLayout = {
-    wrapperCol: { offset: 6, span: 16 },
-};
-
 function UserLogin(props: UserLoginProps) {
 
     const onFinish = (values: LoginModel) => {

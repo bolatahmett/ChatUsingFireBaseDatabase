@@ -84,14 +84,14 @@ function ChatContent(props: ChatContentProps) {
         eval(action)(targetKey);
     };
 
-    const remove = (targetKey: string) => {
-        const chatUserModel: ChatUserModel = {
-            key: targetKey,
-            isActive: false,
-            isMessageReceived: false
-        } as ChatUserModel;
-        props.removeChat(chatUserModel);
-    };
+    // const remove = (targetKey: string) => {
+    //     const chatUserModel: ChatUserModel = {
+    //         key: targetKey,
+    //         isActive: false,
+    //         isMessageReceived: false
+    //     } as ChatUserModel;
+    //     props.removeChat(chatUserModel);
+    // };
 
     const getActiveKey = () => {
         const activeItem: ChatUserModel = tabChatContent.find((item: ChatUserModel) => {
