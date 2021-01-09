@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import './index.css';
-import UserLogin from './components/UserLogin';
-import Chat from './components/chat';
+import '../src/index.css';
+import UserLogin from '../src/components/UserLogin';
+import Chat from '../src/components/chat';
 import { connect } from 'react-redux';
-import UserContext from './components/UserContext';
-import ErrorBoundary from './components/ErrorBoundary';
-import VideoPlayer from './components/player';
+import UserContext from '../src/components/UserContext';
+import ErrorBoundary from '../src/components/ErrorBoundary';
+import VideoPlayer from '../src/components/player';
 import { Button, notification } from 'antd';
 import {
     CheckCircleFilled, CloseCircleFilled

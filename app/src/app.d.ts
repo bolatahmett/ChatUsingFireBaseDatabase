@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import './index.css';
+import '../src/index.css';
 interface AppProps {
     firebase: any;
     database: any;
