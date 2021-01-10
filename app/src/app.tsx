@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../src/index.css';
 import UserLogin from '../src/components/UserLogin';
-import Chat from '../src/components/chat';
+import Chat from '../src/components/Chat';
 import { connect } from 'react-redux';
 import UserContext from '../src/components/UserContext';
 import ErrorBoundary from '../src/components/ErrorBoundary';
