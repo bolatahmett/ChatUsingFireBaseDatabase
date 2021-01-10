@@ -7,7 +7,7 @@ import Users from './Users';
 import { setOnline } from '../helper/helper';
 import UserContext from './UserContext';
 import { Col, Row } from 'antd';
-import { sharingListener } from '../listener/listener';
+import { sharingListener } from '../chat-listener/listener';
 import { connect } from 'react-redux';
 
 

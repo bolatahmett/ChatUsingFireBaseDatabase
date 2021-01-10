@@ -3,7 +3,7 @@ import 'antd/dist/antd.css'
 import { connect } from 'react-redux';
 import { addChat, removeChat, activateChat } from '../redux/actions/action';
 import { addChatMessages } from '../redux/actions/action';
-import { chatMessagesListener } from '../listener/listener';
+import { chatMessagesListener } from '../chat-listener/listener';
 import { Tabs } from 'antd';
 import MessageContent from './MessageContent';
 import TabNotification from './TabNotification';
