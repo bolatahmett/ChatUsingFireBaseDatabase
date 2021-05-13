@@ -2,7 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const webpack = require('webpack');
-const dotenv = require('dotenv');
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -14,7 +13,6 @@ const second = today.getSeconds();
 
 const uniqueId = `${yyyy}${mm}${dd}${hh}${min}${second}`;
 
-var dotenvConfig = dotenv.config({ path: __dirname + '/.env' });
 module.exports = env => {
     console.log(env);
     return {
@@ -55,9 +53,6 @@ module.exports = env => {
         plugins: [
             new HtmlWebpackPlugin({
                 template: 'app/index.html',
-            }),
-            new webpack.DefinePlugin({
-                "process.env": JSON.stringify(dotenvConfig.parsed)
             }),
             new CopyWebpackPlugin({
                 patterns: [
