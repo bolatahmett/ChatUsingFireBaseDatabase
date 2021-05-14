@@ -57,7 +57,7 @@ module.exports = env => {
                 template: 'app/index.html',
             }),
             new webpack.DefinePlugin({
-                "process.env": JSON.stringify(dotenvConfig.parsed)
+                "process.env": JSON.stringify(process.env)
             }),
             new CopyWebpackPlugin({
                 patterns: [
