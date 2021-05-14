@@ -10,6 +10,8 @@ env:
   REACT_APP_FB_PROJECT_ID: ${{ secrets.FB_PROJECT_ID }}
   REACT_APP_FB_STORAGE_BUCKET: ${{ secrets.FB_STORAGE_BUCKET }}
   REACT_APP_FB_MESSAGING_SENDER_ID: ${{ secrets.FB_MESSAGING_SENDER_ID }}
+  REACT_APP_APPID: ${{ secrets.REACT_APP_APPID }}
+  REACT_APP_MID: ${{ secrets.REACT_APP_MID }}
 jobs:
   build_and_preview:
     runs-on: ubuntu-latest
