@@ -16,3 +16,4 @@ jobs:
           projectId: entertainmentchatworld
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
+          REACT_APP_APIKEY: ${{ secrets.REACT_APP_APIKEY }}'
